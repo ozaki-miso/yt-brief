@@ -22,9 +22,13 @@ export async function POST(req: Request) {
     };
 
     // fetchするURLも画像のスニペットに合わせて微調整
-    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https://www.youtube.com/watch?v=${videoId}&chunkSize=500`;
+    const targetVideoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=${encodeURIComponent(targetVideoUrl)}`;
     
+    console.log("Requesting API with URL:", apiUrl); // ログで確認用
+
     const response = await fetch(apiUrl, options);
+    const data = await response.json();
     
     if (!response.ok) {
       const errorDetail = await response.text();
