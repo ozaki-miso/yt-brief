@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { YoutubeTranscript } from "youtube-transcript";
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -10,36 +9,45 @@ export async function POST(req: Request) {
     const { url } = await req.json();
     const videoId = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
 
-    let transcriptText = "";
-    
-    try {
-      // 言語を指定せず、利用可能な字幕をすべて取得しにいく
-      const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      transcriptText = transcript.map(t => t.text).join(" ").slice(0, 4000);
-    } catch (e: any) {
-      console.error("Fetch Error:", e);
-      // ここでエラーが出るなら、YouTube側がサーバーからのアクセスを拒否しています
-      return NextResponse.json({ 
-        error: "YOUTUBE_BLOCK",
-        message: "YouTube blocked the request. Please try again or use a different video." 
-      }, { status: 500 });
+    if (!videoId) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+
+    // 1. RapidAPIを使用して字幕を取得 (ここが重要！)
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7BDD643B', // 取得したキー
+        'X-RapidAPI-Host': 'youtube-transcript3.p.rapidapi.com'
+      }
+    };
+
+    const response = await fetch(`https://youtube-transcript3.p.rapidapi.com/api/transcripts/${videoId}`, options);
+    const data = await response.json();
+
+    if (!data || !data.transcripts) {
+      return NextResponse.json({ error: "No captions available" }, { status: 500 });
     }
 
+    // 字幕の配列を1つのテキストにまとめる (英語字幕を選択)
+    const transcriptText = data.transcripts
+      .map((t: any) => t.text)
+      .join(" ")
+      .slice(0, 4500);
+
+    // 2. OpenAIで要約
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { 
           role: "system", 
-          content: "Summarize the following transcript in English with 3 key takeaways. Format as a bulleted list." 
+          content: "You are a professional video summarizer. Summarize in English with 3 punchy points." 
         },
         { role: "user", content: transcriptText }
       ],
     });
 
-    return NextResponse.json({ 
-      points: completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [] 
-    });
+    const points = completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [];
+    return NextResponse.json({ points });
 
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
