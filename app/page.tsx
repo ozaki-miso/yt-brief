@@ -66,7 +66,7 @@ export default function Home() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(FREE_SUMMARY_STORAGE_KEY);
-    setHasUsedFreeSummary(stored === "1");
+    setHasUsedFreeSummary(false);
     return () => abortRef.current?.abort();
   }, []);
 
@@ -97,8 +97,8 @@ export default function Home() {
       points: payload.points || [], 
     };
 
-    window.localStorage.setItem(FREE_SUMMARY_STORAGE_KEY, "1");
-    setHasUsedFreeSummary(true);
+   // window.localStorage.setItem(FREE_SUMMARY_STORAGE_KEY, "1");
+   // setHasUsedFreeSummary(true);
     setResult(summary);
     setPhase("result");
     requestAnimationFrame(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }));
