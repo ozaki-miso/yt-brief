@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       method: 'GET',
       headers: {
         // Vercelの設定に合わせてここを確認
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7bdd643b',
+        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '',
         // 画像に書いてあった正確なホスト名に変更
         'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com' 
       }
