@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7BDD643B', // 取得したキー
-        'X-RapidAPI-Host': 'youtube-transcript3.p.rapidapi.com'
+        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7bdd643b', // 取得したキー
+        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com'
       }
     };
 
