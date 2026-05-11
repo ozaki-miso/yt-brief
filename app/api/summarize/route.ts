@@ -8,17 +8,13 @@ export async function POST(req: Request) {
   try {
     const { url } = await req.json();
     
-    // 1. YouTube IDを抽出
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
-    const videoId = (match && match[7].length === 11) ? match[7] : null;
+    // 1. YouTube IDの抽出 (ドキュメント推奨のvideoIdを優先使用するため)
+    const videoId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
+    if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL" }, { status: 400 });
 
-    if (!videoId) return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
-
-    // 2. RapidAPI (youtube-transcripts) を叩く
-    // 最も成功率の高い「フルURLをエンコードして渡す」方式に固定します
-    const targetUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=${encodeURIComponent(targetUrl)}`;
+    // 2. RapidAPI (Supadata) へのリクエスト
+    // ドキュメントに従い、text=true を追加して「平文」を直接取得します
+    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?videoId=${videoId}&text=true`;
 
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -30,35 +26,36 @@ export async function POST(req: Request) {
 
     const data = await response.json();
 
+    // ドキュメントにあるエラー応答構造に対応
     if (!response.ok) {
-      console.error("API Error Response:", data);
-      return NextResponse.json({ error: "字幕取得APIが失敗しました", detail: data }, { status: response.status });
+      console.error("Supadata API Error:", data);
+      const errorMsg = data.error || data.message || "字幕の取得に失敗しました";
+      return NextResponse.json({ error: errorMsg }, { status: response.status });
     }
 
-    // データの受け取り口を広げる（content, transcript, または配列形式すべてに対応）
-    let transcriptText = "";
-    if (data.content) transcriptText = data.content;
-    else if (data.transcript) transcriptText = data.transcript;
-    else if (Array.isArray(data)) transcriptText = data.map(i => i.text).join(" ");
+    // text=true を指定した場合、data.content に平文が入ります
+    const transcriptText = data.content || "";
 
-    if (!transcriptText) {
-      return NextResponse.json({ error: "字幕データが空でした" }, { status: 404 });
+    if (!transcriptText || transcriptText.length < 20) {
+      return NextResponse.json({ error: "字幕データが取得できませんでした。動画の設定を確認してください。" }, { status: 404 });
     }
 
-    // 3. OpenAIで要約
+    // 3. OpenAIで要約 (最新の標準的なメッセージ形式)
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Summarize in English with 3 bullet points." },
-        { role: "user", content: transcriptText.slice(0, 7000) }
+        { role: "system", content: "Summarize the transcript in 3 concise English bullet points." },
+        { role: "user", content: transcriptText.slice(0, 8000) }
       ],
+      temperature: 0.5
     });
 
     const points = completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [];
     return NextResponse.json({ points });
 
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Final System Error:", error.message);
+    return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
   }
 }
