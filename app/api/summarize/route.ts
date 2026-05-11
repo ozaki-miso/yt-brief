@@ -7,53 +7,63 @@ export const runtime = 'nodejs';
 export async function POST(req: Request) {
   try {
     const { url } = await req.json();
-    const videoId = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
+    
+    // YouTube IDの抽出（より精度の高い正規表現を使用）
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    const videoId = (match && match[7].length === 11) ? match[7] : null;
 
-    if (!videoId) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    if (!videoId) {
+      return NextResponse.json({ error: "Invalid YouTube ID" }, { status: 400 });
+    }
 
+    // RapidAPIの設定
     const options = {
       method: 'GET',
       headers: {
-        // Vercelの設定に合わせてここを確認
         'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '',
-        // 画像に書いてあった正確なホスト名に変更
-        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com' 
+        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com'
       }
     };
 
-    // fetchするURLも画像のスニペットに合わせて微調整
+    // YouTube動画のフルURLを作成し、エンコードしてAPIに渡す
     const targetVideoUrl = `https://www.youtube.com/watch?v=${videoId}`;
     const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=${encodeURIComponent(targetVideoUrl)}`;
     
-    console.log("Requesting API with URL:", apiUrl); // ログで確認用
+    console.log("Fetching from RapidAPI:", apiUrl);
 
     const response = await fetch(apiUrl, options);
-    const data = await response.json();
     
+    // ここで一度だけ JSON をパースする（重複宣言を削除）
+    const data = await response.json();
+
     if (!response.ok) {
-      const errorDetail = await response.text();
-      console.error("RapidAPI Error:", errorDetail);
-      return NextResponse.json({ error: "API_REJECTED", detail: errorDetail }, { status: response.status });
+      console.error("RapidAPI Error Response:", data);
+      return NextResponse.json({ error: "API_REJECTED", detail: data }, { status: response.status });
     }
 
-    const data = await response.json();
-    // APIの返却形式に合わせてテキストを結合
+    // APIの返却形式（data.content または data.transcript）からテキストを取得
     const transcriptText = data.content || data.transcript || ""; 
 
     if (!transcriptText) {
-      return NextResponse.json({ error: "No transcript content" }, { status: 404 });
+      return NextResponse.json({ error: "No transcript content found" }, { status: 404 });
     }
 
+    // OpenAIで要約
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Summarize this in English with 3 bullet points." },
-        { role: "user", content: transcriptText.slice(0, 5000) }
+        { 
+          role: "system", 
+          content: "You are a professional summarizer. Summarize in English with 3 punchy bullet points." 
+        },
+        { role: "user", content: transcriptText.slice(0, 6000) }
       ],
     });
 
     const points = completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [];
+    
     return NextResponse.json({ points });
 
   } catch (error: any) {
