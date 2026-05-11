@@ -11,38 +11,41 @@ export async function POST(req: Request) {
 
     if (!videoId) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-    // 1. RapidAPIを使用して字幕を取得 (ここが重要！)
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7bdd643b', // 取得したキー
-        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com'
+        // Vercelの設定に合わせてここを確認
+        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '1f9aca7cffmsh9e269b6c2d1b848p13966bjsnfaea7bdd643b',
+        // 画像に書いてあった正確なホスト名に変更
+        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com' 
       }
     };
 
-    const response = await fetch(`https://youtube-transcript3.p.rapidapi.com/api/transcripts/${videoId}`, options);
-    const data = await response.json();
-
-    if (!data || !data.transcripts) {
-      return NextResponse.json({ error: "No captions available" }, { status: 500 });
+    // fetchするURLも画像のスニペットに合わせて微調整
+    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https://www.youtube.com/watch?v=${videoId}&chunkSize=500`;
+    
+    const response = await fetch(apiUrl, options);
+    
+    if (!response.ok) {
+      const errorDetail = await response.text();
+      console.error("RapidAPI Error:", errorDetail);
+      return NextResponse.json({ error: "API_REJECTED", detail: errorDetail }, { status: response.status });
     }
 
-    // 字幕の配列を1つのテキストにまとめる (英語字幕を選択)
-    const transcriptText = data.transcripts
-      .map((t: any) => t.text)
-      .join(" ")
-      .slice(0, 4500);
+    const data = await response.json();
+    // APIの返却形式に合わせてテキストを結合
+    const transcriptText = data.content || data.transcript || ""; 
 
-    // 2. OpenAIで要約
+    if (!transcriptText) {
+      return NextResponse.json({ error: "No transcript content" }, { status: 404 });
+    }
+
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { 
-          role: "system", 
-          content: "You are a professional video summarizer. Summarize in English with 3 punchy points." 
-        },
-        { role: "user", content: transcriptText }
+        { role: "system", content: "Summarize this in English with 3 bullet points." },
+        { role: "user", content: transcriptText.slice(0, 5000) }
       ],
     });
 
@@ -50,6 +53,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ points });
 
   } catch (error: any) {
+    console.error("Final catch error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
