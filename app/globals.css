@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Inter, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  letter-spacing: -0.01em;
+  text-rendering: optimizeLegibility;
+}
+
+@keyframes ytb-scan-core {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.88;
+    filter: drop-shadow(0 0 10px rgb(52 211 153 / 0.45))
+      drop-shadow(0 0 24px rgb(16 185 129 / 0.35));
+  }
+  50% {
+    transform: scale(1.14);
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgb(52 211 153 / 0.95))
+      drop-shadow(0 0 40px rgb(16 185 129 / 0.55));
+  }
+}
+
+@keyframes ytb-scan-node {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.94);
+    filter: drop-shadow(0 0 6px rgb(52 211 153 / 0.25));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 12px rgb(52 211 153 / 0.75));
+  }
+}
+
+@keyframes ytb-scan-edge {
+  0%,
+  100% {
+    stroke-opacity: 0.2;
+    stroke-dashoffset: 18;
+  }
+  50% {
+    stroke-opacity: 0.95;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ytb-scan-ring {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 0.25;
+    transform: scale(0.92);
+  }
+}
+
+.ytb-scan-core {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ytb-scan-core 2.1s ease-in-out infinite;
+}
+
+.ytb-scan-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ytb-scan-node 1.7s ease-in-out infinite;
+}
+
+.ytb-scan-edge {
+  stroke-dasharray: 6 10;
+  animation: ytb-scan-edge 1.4s ease-in-out infinite;
+}
+
+.ytb-scan-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ytb-scan-ring 3s ease-in-out infinite;
+}
