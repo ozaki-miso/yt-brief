@@ -8,42 +8,40 @@ export const runtime = 'nodejs';
 export async function POST(req: Request) {
   try {
     const { url } = await req.json();
-    
-    // 1. YouTube IDの抽出
     const videoId = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('/').pop();
-    
-    // 2. 字幕の取得（ここが難関）
+
     let transcriptText = "";
+    
     try {
+      // 言語を指定せず、利用可能な字幕をすべて取得しにいく
       const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      // 負荷軽減のため最初の2500文字程度を使用
-      transcriptText = transcript.map(t => t.text).join(" ").slice(0, 2500);
+      transcriptText = transcript.map(t => t.text).join(" ").slice(0, 4000);
     } catch (e: any) {
-      console.error("Transcript Error:", e);
-      return NextResponse.json({ error: "字幕の取得に失敗しました。動画の設定を確認してください。" }, { status: 500 });
+      console.error("Fetch Error:", e);
+      // ここでエラーが出るなら、YouTube側がサーバーからのアクセスを拒否しています
+      return NextResponse.json({ 
+        error: "YOUTUBE_BLOCK",
+        message: "YouTube blocked the request. Please try again or use a different video." 
+      }, { status: 500 });
     }
 
-    // 3. OpenAIで要約（gpt-4o-miniで高速化）
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { 
           role: "system", 
-          content: "あなたはプロの動画要約家です。提供された字幕から、動画の核心を突く3つの要点を日本語で作成してください。" 
+          content: "Summarize the following transcript in English with 3 key takeaways. Format as a bulleted list." 
         },
         { role: "user", content: transcriptText }
       ],
     });
 
-    // 4. 結果を返す
-    const content = completion.choices[0].message.content || "";
-    const points = content.split('\n').filter(p => p.trim().length > 0);
-
-    return NextResponse.json({ points });
+    return NextResponse.json({ 
+      points: completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [] 
+    });
 
   } catch (error: any) {
-    console.error("Summarize Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
