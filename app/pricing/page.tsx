@@ -76,10 +76,15 @@ export default function PricingPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [agreed, setAgreed] = useState(false);
 
   async function handleSelectPlan(planId: string) {
     if (planId === "free") {
       router.push("/");
+      return;
+    }
+    if (!agreed) {
+      setCheckoutError("Please agree to the Terms of Service and Privacy Policy to continue.");
       return;
     }
 
@@ -307,7 +312,28 @@ export default function PricingPage() {
           })}
         </div>
 
-        <footer className="mt-14 text-center space-y-3">
+        <footer className="mt-14 text-center space-y-4">
+          {/* Terms agreement checkbox */}
+          <label className="inline-flex items-start gap-3 cursor-pointer max-w-md mx-auto text-left">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked);
+                if (e.target.checked) setCheckoutError(null);
+              }}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-sky-500 cursor-pointer"
+            />
+            <span className="text-[13px] text-zinc-400 leading-relaxed">
+              I agree to the{" "}
+              <Link href="/terms" target="_blank" className="text-sky-400 hover:underline">Terms of Service</Link>
+              {", "}
+              <Link href="/privacy" target="_blank" className="text-sky-400 hover:underline">Privacy Policy</Link>
+              {", and "}
+              <Link href="/refund" target="_blank" className="text-sky-400 hover:underline">Refund Policy</Link>.
+            </span>
+          </label>
+
           {checkoutError && (
             <p className="text-sm text-red-400" role="alert">{checkoutError}</p>
           )}

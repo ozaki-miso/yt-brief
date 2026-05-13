@@ -626,8 +626,11 @@ export default function Home() {
             <p className="text-[10px] font-bold tracking-[0.4em] text-zinc-700 uppercase">
               YT-BRIEF · Condensed Intelligence
             </p>
-            <div className="mt-4 flex justify-center gap-6 text-xs text-zinc-700">
+            <div className="mt-4 flex flex-wrap justify-center gap-6 text-xs text-zinc-700">
               <Link href="/pricing" className="hover:text-zinc-400 transition-colors">Pricing</Link>
+              <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
+              <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy Policy</Link>
+              <Link href="/refund" className="hover:text-zinc-400 transition-colors">Refund Policy</Link>
             </div>
           </footer>
         </>
