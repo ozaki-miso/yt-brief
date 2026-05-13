@@ -162,23 +162,49 @@ export async function POST(request: Request) {
   }
 
   let transcriptText: string;
-  try {
-    const segments = await YoutubeTranscript.fetchTranscript(videoId);
-    transcriptText = segments
-      .map((s) => s.text)
-      .join(" ")
-      .replace(/\s+/g, " ")
-      .trim();
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "Unknown error";
-    console.error("Transcript fetch failed:", msg);
-    return NextResponse.json(
-      {
-        error:
-          "Captions are not available for this video. Try a video that has subtitles/CC enabled.",
-      },
-      { status: 404 },
-    );
+  const rapidApiKey = process.env.RAPIDAPI_KEY;
+
+  if (rapidApiKey) {
+    // 本番: RapidAPI "YouTube Transcripts" で字幕取得
+    try {
+      const res = await fetch(
+        `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?url=https://www.youtube.com/watch?v=${videoId}&chunkSize=500`,
+        {
+          headers: {
+            "X-RapidAPI-Key": rapidApiKey,
+            "X-RapidAPI-Host": "youtube-transcripts.p.rapidapi.com",
+          },
+        },
+      );
+      if (!res.ok) throw new Error(`RapidAPI ${res.status}`);
+      const data = await res.json() as { content?: { text: string }[] };
+      const chunks = Array.isArray(data.content) ? data.content : [];
+      transcriptText = chunks.map((c) => c.text).join(" ").replace(/\s+/g, " ").trim();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Unknown error";
+      console.error("RapidAPI transcript fetch failed:", msg);
+      return NextResponse.json(
+        { error: "Captions are not available for this video. Try a video that has subtitles/CC enabled." },
+        { status: 404 },
+      );
+    }
+  } else {
+    // ローカル開発: youtube-transcript で字幕取得
+    try {
+      const segments = await YoutubeTranscript.fetchTranscript(videoId);
+      transcriptText = segments
+        .map((s) => s.text)
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Unknown error";
+      console.error("Transcript fetch failed:", msg);
+      return NextResponse.json(
+        { error: "Captions are not available for this video. Try a video that has subtitles/CC enabled." },
+        { status: 404 },
+      );
+    }
   }
 
   if (transcriptText.length < 30) {
