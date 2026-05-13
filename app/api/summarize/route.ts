@@ -79,6 +79,7 @@ Rules:
     • heading: a crisp 4–6 word noun phrase (no verbs, no punctuation)
     • body: exactly 2–3 sentences, 40–60 words total — enough context to understand WHY it matters, short enough to scan in under 10 seconds
 - Never pad thin content just to reach 5 points. Quality over quantity.
+- If you cannot find a genuine insight for a point, omit it entirely. Do NOT write generic fillers like "No further detail available" or "Key Insight".
 - The takeaway is one punchy, actionable sentence — the single thing worth remembering.`;
 
 function extractVideoId(rawUrl: string): string | null {
