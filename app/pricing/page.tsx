@@ -76,32 +76,36 @@ export default function PricingPage() {
   const router = useRouter();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
 
-  async function handleSelectPlan(planId: string) {
+  function handleSelectPlan(planId: string) {
     if (planId === "free") {
       router.push("/");
       return;
     }
-    if (!agreed) {
-      setCheckoutError("Please agree to the Terms of Service and Privacy Policy to continue.");
-      return;
-    }
+    // モーダルを開く
+    setAgreed(false);
+    setCheckoutError(null);
+    setPendingPlanId(planId);
+  }
 
-    setLoadingPlan(planId);
+  async function handleConfirmCheckout() {
+    if (!agreed || !pendingPlanId) return;
+
+    setLoadingPlan(pendingPlanId);
     setCheckoutError(null);
 
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({ plan: pendingPlanId }),
       });
 
       const data = await res.json() as { url?: string; error?: string };
 
       if (!res.ok) {
-        // 未ログインの場合はサインイン画面へ
         if (res.status === 401) {
           router.push(`/sign-in?redirect_url=/pricing`);
           return;
@@ -119,8 +123,62 @@ export default function PricingPage() {
     }
   }
 
+  const pendingPlan = plans.find((p) => p.id === pendingPlanId);
+  const pendingPlanName = pendingPlan?.name ?? "";
+  const pendingPlanPrice = pendingPlan && "monthlyPrice" in pendingPlan ? (pendingPlan as PaidPlan).monthlyPrice : "";
+
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-[#07070d] text-zinc-50">
+      {/* ── Terms Agreement Modal ─────────────────── */}
+      {pendingPlanId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setPendingPlanId(null)} />
+          <div className="relative w-full max-w-md rounded-2xl bg-zinc-900 border border-white/10 shadow-2xl p-8 animate-in zoom-in-95 duration-200">
+            <h2 className="text-xl font-bold text-white mb-1">Before you continue</h2>
+            <p className="text-zinc-400 text-sm mb-6">
+              You&apos;re subscribing to <span className="text-white font-semibold">{pendingPlanName} ({pendingPlanPrice}/mo)</span>. Please review and agree to our policies.
+            </p>
+
+            <label className="flex items-start gap-3 cursor-pointer mb-6">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-sky-500 cursor-pointer"
+              />
+              <span className="text-sm text-zinc-300 leading-relaxed">
+                I have read and agree to the{" "}
+                <Link href="/terms" target="_blank" className="text-sky-400 hover:underline">Terms of Service</Link>
+                {", "}
+                <Link href="/privacy" target="_blank" className="text-sky-400 hover:underline">Privacy Policy</Link>
+                {", and "}
+                <Link href="/refund" target="_blank" className="text-sky-400 hover:underline">Refund Policy</Link>
+                {". I understand that payments are non-refundable except as described in the Refund Policy."}
+              </span>
+            </label>
+
+            {checkoutError && (
+              <p className="text-sm text-red-400 mb-4">{checkoutError}</p>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setPendingPlanId(null)}
+                className="flex-1 py-3 rounded-xl border border-white/10 text-zinc-400 hover:text-white hover:border-white/25 text-sm font-semibold transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmCheckout}
+                disabled={!agreed || !!loadingPlan}
+                className="flex-1 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+              >
+                {loadingPlan ? "Redirecting…" : "Continue to Payment →"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.9]"
         aria-hidden
@@ -312,31 +370,7 @@ export default function PricingPage() {
           })}
         </div>
 
-        <footer className="mt-14 text-center space-y-4">
-          {/* Terms agreement checkbox */}
-          <label className="inline-flex items-start gap-3 cursor-pointer max-w-md mx-auto text-left">
-            <input
-              type="checkbox"
-              checked={agreed}
-              onChange={(e) => {
-                setAgreed(e.target.checked);
-                if (e.target.checked) setCheckoutError(null);
-              }}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-sky-500 cursor-pointer"
-            />
-            <span className="text-[13px] text-zinc-400 leading-relaxed">
-              I agree to the{" "}
-              <Link href="/terms" target="_blank" className="text-sky-400 hover:underline">Terms of Service</Link>
-              {", "}
-              <Link href="/privacy" target="_blank" className="text-sky-400 hover:underline">Privacy Policy</Link>
-              {", and "}
-              <Link href="/refund" target="_blank" className="text-sky-400 hover:underline">Refund Policy</Link>.
-            </span>
-          </label>
-
-          {checkoutError && (
-            <p className="text-sm text-red-400" role="alert">{checkoutError}</p>
-          )}
+        <footer className="mt-14 text-center">
           <p className="text-[13px] text-zinc-600">
             Secure payments powered by Stripe. Cancel your plan anytime.
           </p>
