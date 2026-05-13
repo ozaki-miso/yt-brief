@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-type Billing = "monthly" | "yearly";
 
 type BasePlan = {
   id: "free" | "starter" | "pro";
@@ -19,8 +18,6 @@ type FreePlan = BasePlan & {
 type PaidPlan = BasePlan & {
   id: "starter" | "pro";
   monthlyPrice: string;
-  yearlyMonthlyEquivalent: string;
-  yearlyBilledTotal: string;
   badge?: string;
 };
 
@@ -38,9 +35,7 @@ const plans = [
   {
     id: "starter",
     name: "Starter",
-    monthlyPrice: "$12.99",
-    yearlyMonthlyEquivalent: "$10.39",
-    yearlyBilledTotal: "$124.71 billed yearly",
+    monthlyPrice: "$4.99",
     description: "Ideal for students and casual learners.",
     features: [
       "30 summaries every month",
@@ -52,14 +47,12 @@ const plans = [
     id: "pro",
     name: "Pro",
     badge: "Most Popular",
-    monthlyPrice: "$19.99",
-    yearlyMonthlyEquivalent: "$15.99",
-    yearlyBilledTotal: "$191.90 billed yearly",
+    monthlyPrice: "$8.99",
     description: "For professionals who value their time.",
     features: [
-      "UNLIMITED summaries", 
-      "Priority instant processing", 
-      "Early access to new features"
+      "100 summaries every month",
+      "Priority instant processing",
+      "Early access to new features",
     ],
   },
 ] as const satisfies readonly (FreePlan | PaidPlan)[];
@@ -80,7 +73,46 @@ function CheckIcon() {
 }
 
 export default function PricingPage() {
-  const [billing, setBilling] = useState<Billing>("monthly");
+  const router = useRouter();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  async function handleSelectPlan(planId: string) {
+    if (planId === "free") {
+      router.push("/");
+      return;
+    }
+
+    setLoadingPlan(planId);
+    setCheckoutError(null);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planId }),
+      });
+
+      const data = await res.json() as { url?: string; error?: string };
+
+      if (!res.ok) {
+        // 未ログインの場合はサインイン画面へ
+        if (res.status === 401) {
+          router.push(`/sign-in?redirect_url=/pricing`);
+          return;
+        }
+        throw new Error(data.error ?? "Something went wrong.");
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : "Please try again.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
 
   return (
     <div className="relative min-h-[100svh] overflow-hidden bg-[#07070d] text-zinc-50">
@@ -133,43 +165,6 @@ export default function PricingPage() {
             in seconds.
           </p>
 
-          <div className="mt-10 inline-flex rounded-full border border-white/12 bg-black/35 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md">
-            <button
-              type="button"
-              aria-pressed={billing === "monthly"}
-              onClick={() => setBilling("monthly")}
-              className={`relative rounded-full px-6 py-2 text-sm font-semibold transition-[color] ${
-                billing === "monthly"
-                  ? "text-white"
-                  : "text-zinc-400 hover:text-zinc-200"
-              }`}
-            >
-              {billing === "monthly" ? (
-                <span className="absolute inset-0 rounded-full bg-white/[0.085] shadow-[0_14px_40px_-30px_rgb(147_197_253/0.85)] ring-1 ring-white/15" />
-              ) : null}
-              <span className="relative">Monthly</span>
-            </button>
-            <button
-              type="button"
-              aria-pressed={billing === "yearly"}
-              onClick={() => setBilling("yearly")}
-              className={`relative rounded-full px-6 py-2 text-sm font-semibold transition-[color] ${
-                billing === "yearly"
-                  ? "text-white"
-                  : "text-zinc-400 hover:text-zinc-200"
-              }`}
-            >
-              {billing === "yearly" ? (
-                <span className="absolute inset-0 rounded-full bg-white/[0.085] shadow-[0_14px_40px_-28px_rgb(236_233_254/0.9)] ring-1 ring-white/15" />
-              ) : null}
-              <span className="relative flex items-center gap-2">
-                Yearly
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-200/90 ring-1 ring-emerald-400/30">
-                  Save 20%
-                </span>
-              </span>
-            </button>
-          </div>
         </div>
 
         <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -182,15 +177,9 @@ export default function PricingPage() {
               plan.id === "free"
                 ? { main: "$0", suffix: "forever", footnote: null as string | null }
                 : {
-                    main:
-                      billing === "monthly"
-                        ? paidPlan.monthlyPrice
-                        : paidPlan.yearlyMonthlyEquivalent,
+                    main: paidPlan.monthlyPrice,
                     suffix: "/month",
-                    footnote:
-                      billing === "yearly"
-                        ? paidPlan.yearlyBilledTotal
-                        : ("Billed monthly · cancel anytime" as string),
+                    footnote: "Billed monthly · cancel anytime" as string,
                   };
 
             const cardInner = (
@@ -229,7 +218,7 @@ export default function PricingPage() {
                 <ul className="mt-8 flex-1 space-y-3.5">
                   {plan.features.map((feature) => {
                     const isUnlimitedHighlight =
-                      isPro && feature === "UNLIMITED summaries";
+                      isPro && feature === "100 summaries every month";
                     return (
                       <li
                         key={feature}
@@ -247,12 +236,12 @@ export default function PricingPage() {
                             </p>
                             <p className="mt-1.5 text-lg font-semibold tracking-tight text-white sm:text-xl">
                               <span className="bg-gradient-to-r from-emerald-200 via-white to-emerald-100 bg-clip-text text-transparent">
-                                UNLIMITED
+                                100
                               </span>{" "}
-                              <span className="text-zinc-100">summaries</span>
+                              <span className="text-zinc-100">summaries / month</span>
                             </p>
                             <p className="mt-1 text-[13px] leading-relaxed text-zinc-400">
-                              No caps, no throttling—get briefs as fast as you
+                              Enough for daily use—get briefs as fast as you
                               find videos worth watching.
                             </p>
                           </div>
@@ -267,15 +256,18 @@ export default function PricingPage() {
                 <div className="mt-10">
                   <button
                     type="button"
-                    className={
+                    disabled={loadingPlan !== null}
+                    onClick={() => handleSelectPlan(plan.id)}
+                    className={[
                       isPro
                         ? "w-full rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-4 py-[14px] text-[15px] font-semibold text-white shadow-[0_26px_70px_-32px_rgb(129_140_248/0.9),0_18px_50px_-38px_rgb(217_70_239/0.55)] ring-1 ring-white/30 transition-[filter,transform] hover:brightness-110 active:translate-y-[0.5px]"
                         : isPaid
                           ? "w-full rounded-xl border border-white/16 bg-white/[0.065] px-4 py-[14px] text-[15px] font-semibold text-white transition-colors hover:border-white/25 hover:bg-white/[0.1]"
-                          : "w-full rounded-xl border border-white/12 bg-transparent px-4 py-[14px] text-[15px] font-semibold text-zinc-50 transition-colors hover:border-white/20 hover:bg-white/[0.035]"
-                    }
+                          : "w-full rounded-xl border border-white/12 bg-transparent px-4 py-[14px] text-[15px] font-semibold text-zinc-50 transition-colors hover:border-white/20 hover:bg-white/[0.035]",
+                      "disabled:opacity-60 disabled:cursor-not-allowed",
+                    ].join(" ")}
                   >
-                    Select Plan
+                    {loadingPlan === plan.id ? "Redirecting…" : "Select Plan"}
                   </button>
                 </div>
               </div>
@@ -315,9 +307,12 @@ export default function PricingPage() {
           })}
         </div>
 
-        <footer className="mt-14 text-center">
+        <footer className="mt-14 text-center space-y-3">
+          {checkoutError && (
+            <p className="text-sm text-red-400" role="alert">{checkoutError}</p>
+          )}
           <p className="text-[13px] text-zinc-600">
-            Secure payments powered by Stripe. You can cancel your plan at any time.
+            Secure payments powered by Stripe. Cancel your plan anytime.
           </p>
         </footer>
       </div>

@@ -1,61 +1,279 @@
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { YoutubeTranscript } from "youtube-transcript";
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+console.log("Key exists:", !!process.env.OPENAI_API_KEY);
+
+// ────────────────────────────────────────────
+// プラン別の上限定義
+// ────────────────────────────────────────────
+const PLAN_LIMITS: Record<string, number> = {
+  free: 3,      // 生涯3回
+  starter: 30,  // 月30回
+  pro: 100,     // 月100回
+};
+
+function currentMonth(): string {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+type UsageMeta = {
+  usageCount?: number;
+  usageMonth?: string;
+  stripeCustomerId?: string;
+  subscriptionId?: string | null;
+};
+
+async function checkAndIncrementUsage(userId: string): Promise<
+  | { allowed: true; remaining: number }
+  | { allowed: false; error: string; remaining: number }
+> {
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(userId);
+
+  const plan = (user.publicMetadata?.plan as string | undefined) ?? "free";
+  const limit = PLAN_LIMITS[plan] ?? 1;
+  const meta = (user.privateMetadata ?? {}) as UsageMeta;
+
+  const month = currentMonth();
+  const isFree = plan === "free";
+
+  // Free は月リセットなし、有料プランは月ごとにリセット
+  const storedMonth = meta.usageMonth ?? "";
+  const count = !isFree && storedMonth !== month ? 0 : (meta.usageCount ?? 0);
+
+  if (count >= limit) {
+    return {
+      allowed: false,
+      error: `You have used all ${limit} ${isFree ? "" : "monthly "}summaries on the ${plan} plan. Upgrade to get more.`,
+      remaining: 0,
+    };
+  }
+
+  // 使用回数をインクリメント
+  await clerk.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      ...meta,
+      usageCount: count + 1,
+      usageMonth: month,
+    },
+  });
+
+  return { allowed: true, remaining: limit - (count + 1) };
+}
+
+const SYSTEM_PROMPT = `You are a professional video analyst who writes executive-style intelligence briefs.
+Your summaries are direct, specific, and immediately useful to a busy professional.
+
+Rules:
+- Adapt the number of insight points (3–5) to the density of the content:
+    • Short or simple video  (<10 min or thin content) → 3 points
+    • Medium video (10–30 min or moderate content)     → 4 points
+    • Long or information-dense video (30+ min)        → 5 points
+- Each point must have:
+    • heading: a crisp 4–6 word noun phrase (no verbs, no punctuation)
+    • body: exactly 2–3 sentences, 40–60 words total — enough context to understand WHY it matters, short enough to scan in under 10 seconds
+- Never pad thin content just to reach 5 points. Quality over quantity.
+- The takeaway is one punchy, actionable sentence — the single thing worth remembering.`;
+
+function extractVideoId(rawUrl: string): string | null {
   try {
-    const { url } = await req.json();
-    
-    // 1. YouTube IDの抽出 (ドキュメント推奨のvideoIdを優先使用するため)
-    const videoId = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/)?.[1];
-    if (!videoId) return NextResponse.json({ error: "Invalid YouTube URL" }, { status: 400 });
+    const u = new URL(rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`);
+    const h = u.hostname.toLowerCase();
 
-    // 2. RapidAPI (Supadata) へのリクエスト
-    // ドキュメントに従い、text=true を追加して「平文」を直接取得します
-    const apiUrl = `https://youtube-transcripts.p.rapidapi.com/youtube/transcript?videoId=${videoId}&text=true`;
+    const allowed =
+      h === "youtube.com" ||
+      h === "www.youtube.com" ||
+      h === "m.youtube.com" ||
+      h === "music.youtube.com" ||
+      h === "youtu.be" ||
+      h === "www.youtu.be";
+    if (!allowed) return null;
 
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '',
-        'X-RapidAPI-Host': 'youtube-transcripts.p.rapidapi.com'
-      }
-    });
-
-    const data = await response.json();
-
-    // ドキュメントにあるエラー応答構造に対応
-    if (!response.ok) {
-      console.error("Supadata API Error:", data);
-      const errorMsg = data.error || data.message || "字幕の取得に失敗しました";
-      return NextResponse.json({ error: errorMsg }, { status: response.status });
+    if (h === "youtu.be" || h === "www.youtu.be") {
+      const id = u.pathname.replace(/^\//, "").split("/")[0];
+      return /^[\w-]{11}$/.test(id) ? id : null;
     }
 
-    // text=true を指定した場合、data.content に平文が入ります
-    const transcriptText = data.content || "";
+    const v = u.searchParams.get("v");
+    if (v && /^[\w-]{11}$/.test(v)) return v;
 
-    if (!transcriptText || transcriptText.length < 20) {
-      return NextResponse.json({ error: "字幕データが取得できませんでした。動画の設定を確認してください。" }, { status: 404 });
+    const m =
+      u.pathname.match(/\/shorts\/([\w-]{11})/) ??
+      u.pathname.match(/\/embed\/([\w-]{11})/) ??
+      u.pathname.match(/\/live\/([\w-]{11})/);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function POST(request: Request) {
+  console.log("Key exists:", !!process.env.OPENAI_API_KEY);
+
+  // ── 認証・プラン制限チェック ──────────────────
+  const { userId } = await auth();
+
+  // 未ログインはクライアント側 localStorage で1回制限（サーバーは通過させる）
+  let usageResult: { allowed: true; remaining: number } | null = null;
+  if (userId) {
+    const result = await checkAndIncrementUsage(userId);
+    if (!result.allowed) {
+      return NextResponse.json(
+        { error: result.error, upgradeRequired: true },
+        { status: 403 },
+      );
     }
+    usageResult = result;
+  }
+  // ─────────────────────────────────────────────
 
-    // 3. OpenAIで要約 (最新の標準的なメッセージ形式)
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "OPENAI_API_KEY is not configured on the server." },
+      { status: 503 },
+    );
+  }
+
+  let url: string;
+  try {
+    const body = await request.json() as { url?: unknown };
+    url = typeof body.url === "string" ? body.url.trim() : "";
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  if (!url) {
+    return NextResponse.json({ error: "Missing url." }, { status: 400 });
+  }
+
+  const videoId = extractVideoId(url);
+  if (!videoId) {
+    return NextResponse.json(
+      { error: "Please enter a valid YouTube URL (youtube.com or youtu.be)." },
+      { status: 400 },
+    );
+  }
+
+  let transcriptText: string;
+  try {
+    const segments = await YoutubeTranscript.fetchTranscript(videoId);
+    transcriptText = segments
+      .map((s) => s.text)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Unknown error";
+    console.error("Transcript fetch failed:", msg);
+    return NextResponse.json(
+      {
+        error:
+          "Captions are not available for this video. Try a video that has subtitles/CC enabled.",
+      },
+      { status: 404 },
+    );
+  }
+
+  if (transcriptText.length < 30) {
+    return NextResponse.json(
+      { error: "The transcript for this video is too short to summarize." },
+      { status: 404 },
+    );
+  }
+
+  const openai = new OpenAI({ apiKey });
+
+  let raw: string;
+  try {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Summarize the transcript in 3 concise English bullet points." },
-        { role: "user", content: transcriptText.slice(0, 8000) }
+        { role: "system", content: SYSTEM_PROMPT },
+        {
+          role: "user",
+          content: [
+            `Video URL: https://www.youtube.com/watch?v=${videoId}`,
+            "",
+            "Transcript (may be truncated):",
+            transcriptText.slice(0, 10_000),
+            "",
+            "Produce a high-value intelligence brief adapted to this video's length and density.",
+            "Return ONLY valid JSON — no markdown, no extra keys:",
+            `{
+  "title": "<descriptive title, max 10 words>",
+  "points": [
+    { "heading": "<4-6 word noun phrase>", "body": "<2-3 sentences, 40-60 words>" }
+    // include 3, 4, or 5 points depending on content density
+  ],
+  "takeaway": "<one punchy actionable sentence>"
+}`,
+          ].join("\n"),
+        },
       ],
-      temperature: 0.5
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+      max_tokens: 900,
     });
+    raw = completion.choices[0]?.message?.content ?? "";
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "OpenAI error";
+    console.error("OpenAI error:", msg);
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
 
-    const points = completion.choices[0].message.content?.split('\n').filter(p => p.trim()) || [];
-    return NextResponse.json({ points });
+  try {
+    const parsed = JSON.parse(raw) as {
+      title?: unknown;
+      points?: unknown;
+      takeaway?: unknown;
+    };
 
-  } catch (error: any) {
-    console.error("Final System Error:", error.message);
-    return NextResponse.json({ error: "予期せぬエラーが発生しました" }, { status: 500 });
+    const title = typeof parsed.title === "string" ? parsed.title : "Video Summary";
+    const takeaway =
+      typeof parsed.takeaway === "string" ? parsed.takeaway.trim() : null;
+
+    type RawPoint = { heading?: unknown; body?: unknown };
+    const rawPoints: RawPoint[] = Array.isArray(parsed.points)
+      ? (parsed.points as RawPoint[])
+      : [];
+
+    const points = rawPoints
+      .slice(0, 5)
+      .map((p) => ({
+        heading:
+          typeof p.heading === "string" && p.heading.trim()
+            ? p.heading.trim()
+            : "Key Insight",
+        body:
+          typeof p.body === "string" && p.body.trim()
+            ? p.body.trim()
+            : "No detail available.",
+      }));
+
+    while (points.length < 5) {
+      points.push({ heading: "Key Insight", body: "No further detail available." });
+    }
+
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    return NextResponse.json({
+      url,
+      title,
+      points,
+      takeaway,
+      thumbnailUrl,
+      remaining: usageResult?.remaining ?? null,
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "Could not parse the AI response." },
+      { status: 502 },
+    );
   }
 }
