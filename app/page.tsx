@@ -163,9 +163,22 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_#111_0%,_#000_70%)]" />
 
       <header className="relative z-20 flex justify-between items-center px-4 sm:px-8 py-5 sm:py-8 max-w-7xl mx-auto">
-        <div className="text-2xl sm:text-4xl font-black tracking-tighter text-white italic">
-          YT<span className="text-indigo-500">.</span>brief
-        </div>
+        <Link href="/" className="flex items-center gap-2.5 group select-none">
+          {/* Icon mark */}
+          <div className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 shadow-[0_0_16px_rgba(56,189,248,0.45)] group-hover:shadow-[0_0_24px_rgba(56,189,248,0.65)] transition-shadow">
+            <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4 sm:w-4.5 sm:h-4.5">
+              {/* Play triangle */}
+              <path d="M7 5.5l8 4.5-8 4.5V5.5z" fill="white" />
+              {/* Brief lines */}
+              <path d="M3 14.5h5M3 16.5h3" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+            </svg>
+          </div>
+          {/* Wordmark */}
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-xl sm:text-2xl font-black tracking-tight text-white leading-none">YT</span>
+            <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent leading-none">brief</span>
+          </div>
+        </Link>
         <div className="flex items-center gap-2 sm:gap-6">
           <Link href="/pricing" className="text-sm font-bold text-zinc-400 hover:text-white px-3 sm:px-4 py-2 rounded-lg transition-all">
             Pricing
