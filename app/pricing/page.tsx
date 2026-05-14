@@ -199,14 +199,17 @@ export default function PricingPage() {
 
       <div className="relative z-10 mx-auto flex max-w-6xl flex-col px-6 pb-20 pt-10 sm:px-8 lg:px-12">
         <header className="flex items-center justify-between gap-6">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-300 transition-colors hover:text-white"
-          >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-[11px] font-semibold tracking-[0.2em] text-white/80 transition-colors group-hover:border-white/25">
-              Yt
-            </span>
-            <span className="tracking-tight">YT-brief</span>
+          <Link href="/" className="flex items-center gap-2.5 group select-none">
+            <div className="relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 shadow-[0_0_16px_rgba(56,189,248,0.45)] group-hover:shadow-[0_0_24px_rgba(56,189,248,0.65)] transition-shadow">
+              <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
+                <path d="M7 5.5l8 4.5-8 4.5V5.5z" fill="white" />
+                <path d="M3 14.5h5M3 16.5h3" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+              </svg>
+            </div>
+            <div className="flex items-baseline gap-0.5">
+              <span className="text-xl font-black tracking-tight text-white leading-none">YT</span>
+              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent leading-none">brief</span>
+            </div>
           </Link>
           <Link
             href="/"
