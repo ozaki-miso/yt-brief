@@ -348,25 +348,44 @@ export default function Home() {
                 <button onClick={() => setPhase("idle")} className="text-xs font-bold text-zinc-500 hover:text-white transition-colors tracking-widest uppercase">
                   ← New Analysis
                 </button>
-                <button 
-                  onClick={() => {
-                    const text = [
-                      result.title,
-                      "",
-                      ...result.points.map(
-                        (p, i) => `${String(i + 1).padStart(2, "0")} ${p.heading}: ${p.body}`,
-                      ),
-                      ...(result.takeaway ? ["", `Bottom Line: ${result.takeaway}`] : []),
-                    ].join("\n");
-                    copyToClipboard(text).then(() => {
+                <div className="flex items-center gap-2">
+                  {/* X (Twitter) share */}
+                  <a
+                    href={(() => {
+                      const takeaway = result.takeaway ? `\n"${result.takeaway}"` : "";
+                      const tweet = `📋 ${result.title}${takeaway}\n\nvia YT-brief — yt-brief.com`;
+                      return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
+                    })()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs font-bold border border-white/15 text-zinc-300 px-4 py-2.5 rounded-full hover:border-white/40 hover:text-white transition-all"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                    Share
+                  </a>
+                  {/* Copy to clipboard */}
+                  <button
+                    onClick={() => {
+                      const text = [
+                        result.title,
+                        "",
+                        ...result.points.map(
+                          (p, i) => `${String(i + 1).padStart(2, "0")} ${p.heading}: ${p.body}`,
+                        ),
+                        ...(result.takeaway ? ["", `Bottom Line: ${result.takeaway}`] : []),
+                      ].join("\n");
+                      copyToClipboard(text).then(() => {
                         setCopied(true);
                         setTimeout(() => setCopied(false), 2000);
-                    });
-                  }}
-                  className="text-xs font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-sky-400 hover:text-white transition-all shadow-lg"
-                >
-                  {copied ? "COPIED!" : "SHARE REPORT"}
-                </button>
+                      });
+                    }}
+                    className="text-xs font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-sky-400 hover:text-white transition-all shadow-lg"
+                  >
+                    {copied ? "COPIED!" : "COPY REPORT"}
+                  </button>
+                </div>
               </div>
 
               <div className="bg-zinc-900 rounded-[32px] overflow-hidden border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
