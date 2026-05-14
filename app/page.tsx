@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, Show, UserButton, useAuth } from "@clerk/nextjs";
 import { FormEvent, useEffect, useRef, useState } from "react";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -76,12 +76,19 @@ export default function Home() {
   const [upgradeRequired, setUpgradeRequired] = useState(false);
   const [anonLimitReached, setAnonLimitReached] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
+    // サインイン済みの場合は localStorage の匿名制限をリセット
+    if (isSignedIn) {
+      window.localStorage.removeItem(ANON_STORAGE_KEY);
+      setAnonLimitReached(false);
+      return () => abortRef.current?.abort();
+    }
     const count = Number(window.localStorage.getItem(ANON_STORAGE_KEY) ?? "0");
     setAnonLimitReached(count >= ANON_LIMIT);
     return () => abortRef.current?.abort();
-  }, []);
+  }, [isSignedIn]);
 
   async function runSummarize(normalizedUrl: string, signal: AbortSignal) {
     setResult(null);
