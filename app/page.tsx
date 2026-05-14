@@ -162,37 +162,33 @@ export default function Home() {
     <div className="relative min-h-[100svh] bg-black text-white font-sans selection:bg-sky-500/30">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_#111_0%,_#000_70%)]" />
 
-      <header className="relative z-20 flex justify-between items-center px-8 py-8 max-w-7xl mx-auto">
-  <div className="text-4xl font-black tracking-tighter text-white italic">
-    YT<span className="text-indigo-500">.</span>brief
-  </div>
+      <header className="relative z-20 flex justify-between items-center px-4 sm:px-8 py-5 sm:py-8 max-w-7xl mx-auto">
+        <div className="text-2xl sm:text-4xl font-black tracking-tighter text-white italic">
+          YT<span className="text-indigo-500">.</span>brief
+        </div>
+        <div className="flex items-center gap-2 sm:gap-6">
+          <Link href="/pricing" className="text-sm font-bold text-zinc-400 hover:text-white px-3 sm:px-4 py-2 rounded-lg transition-all">
+            Pricing
+          </Link>
+          <Show when="signed-out">
+            <SignInButton>
+              <button className="hidden sm:block text-sm font-bold text-zinc-200 hover:text-white px-5 py-2.5 rounded-xl border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 transition-all">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton>
+              <button className="text-xs sm:text-sm font-bold bg-sky-500 hover:bg-sky-400 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all active:scale-95">
+                Sign Up Free
+              </button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <UserButton appearance={{ elements: { avatarBox: "w-9 h-9" } }} />
+          </Show>
+        </div>
+      </header>
 
-  <div className="flex items-center gap-3 sm:gap-6">
-    <Link
-      href="/pricing"
-      className="text-sm font-bold text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition-all"
-    >
-      Pricing
-    </Link>
-    <Show when="signed-out">
-      <SignInButton>
-        <button className="text-sm font-bold text-zinc-200 hover:text-white px-5 py-2.5 rounded-xl border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/10 transition-all">
-          Sign In
-        </button>
-      </SignInButton>
-      <SignUpButton>
-        <button className="text-sm font-bold bg-sky-500 hover:bg-sky-400 text-white px-5 py-2.5 rounded-xl shadow-[0_0_20px_rgba(56,189,248,0.4)] hover:shadow-[0_0_28px_rgba(56,189,248,0.6)] transition-all active:scale-95">
-          Sign Up Free
-        </button>
-      </SignUpButton>
-    </Show>
-    <Show when="signed-in">
-      <UserButton appearance={{ elements: { avatarBox: "w-9 h-9" } }} />
-    </Show>
-  </div>
-</header>
-
-      <main className="relative z-10 flex flex-col items-center px-6 pt-20 pb-32">
+      <main className="relative z-10 flex flex-col items-center px-4 sm:px-6 pt-10 sm:pt-20 pb-32">
         <div className="w-full max-w-2xl text-center">
           {phase === "idle" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -203,11 +199,11 @@ export default function Home() {
               </div>
 
               {/* Headline */}
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05]">
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 leading-[1.05]">
                 Turn YouTube into<br />
                 <span className="text-sky-400">your unfair advantage.</span>
               </h1>
-              <p className="text-lg text-zinc-400 mb-5 max-w-lg mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg text-zinc-400 mb-4 sm:mb-5 max-w-lg mx-auto leading-relaxed">
                 The fastest way to extract insights from any video — no matter the length, no matter the language.
               </p>
 
@@ -227,11 +223,11 @@ export default function Home() {
               </div>
 
               {/* Social proof bar */}
-              <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-10 text-zinc-600 text-xs font-medium">
+              <div className="flex flex-wrap justify-center items-center gap-x-5 gap-y-2 mb-8 sm:mb-10 text-zinc-600 text-xs font-medium">
                 <span className="flex items-center gap-1.5"><span className="text-sky-500 font-bold">1 hr</span> video → 30 sec brief</span>
-                <span className="w-px h-3 bg-zinc-700" />
-                <span className="flex items-center gap-1.5"><span className="text-sky-500 font-bold">100+</span> languages supported</span>
-                <span className="w-px h-3 bg-zinc-700" />
+                <span className="hidden sm:block w-px h-3 bg-zinc-700" />
+                <span className="flex items-center gap-1.5"><span className="text-sky-500 font-bold">100+</span> languages</span>
+                <span className="hidden sm:block w-px h-3 bg-zinc-700" />
                 <span className="flex items-center gap-1.5"><span className="text-sky-500 font-bold">Free</span> to start</span>
               </div>
               
@@ -255,7 +251,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={anonLimitReached}
-                    className="bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(56,189,248,0.4)] hover:shadow-[0_0_32px_rgba(56,189,248,0.6)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none active:scale-95 text-sm tracking-wide"
+                    className="w-full sm:w-auto bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(56,189,248,0.4)] hover:shadow-[0_0_32px_rgba(56,189,248,0.6)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none active:scale-95 text-sm tracking-wide"
                   >
                     Get Brief →
                   </button>
@@ -389,20 +385,20 @@ export default function Home() {
                   </h2>
                 </div>
 
-                <div className="p-8 sm:p-12 space-y-12">
+                <div className="p-5 sm:p-12 space-y-8 sm:space-y-12">
                   {result.points.map((point, i) => (
-                    <div key={i} className="group flex items-start gap-6">
-                      <div className="flex flex-col items-center">
-                        <span className="text-sky-500 font-black text-2xl tracking-tighter italic">
+                    <div key={i} className="group flex items-start gap-4 sm:gap-6">
+                      <div className="flex flex-col items-center shrink-0">
+                        <span className="text-sky-500 font-black text-xl sm:text-2xl tracking-tighter italic">
                           {(i + 1).toString().padStart(2, "0")}
                         </span>
                         <div className="w-px h-full bg-gradient-to-b from-sky-500/50 to-transparent mt-2 group-last:hidden" />
                       </div>
-                      <div className="space-y-2 flex-1">
-                        <h3 className="text-white text-lg font-bold uppercase tracking-wide">
+                      <div className="space-y-1.5 flex-1 min-w-0">
+                        <h3 className="text-white text-base sm:text-lg font-bold uppercase tracking-wide">
                           {point.heading}
                         </h3>
-                        <p className="text-zinc-400 leading-relaxed font-medium text-[17px]">
+                        <p className="text-zinc-400 leading-relaxed font-medium text-sm sm:text-[17px]">
                           {point.body}
                         </p>
                       </div>
@@ -429,7 +425,7 @@ export default function Home() {
       {phase === "idle" && (
         <>
           {/* ── TESTIMONIALS ─────────────────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-28">
+          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
             <div className="text-center mb-14">
               <span className="text-[10px] font-bold tracking-[0.3em] text-sky-500 uppercase">What People Are Saying</span>
               <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Real people. Real time saved.</h2>
@@ -482,7 +478,7 @@ export default function Home() {
           </section>
 
           {/* ── HOW IT WORKS ─────────────────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-28">
+          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
             <div className="text-center mb-14">
               <span className="text-[10px] font-bold tracking-[0.3em] text-sky-500 uppercase">How It Works</span>
               <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Simple enough for anyone. Powerful enough for pros.</h2>
@@ -536,7 +532,7 @@ export default function Home() {
           </section>
 
           {/* ── TRANSLATE ANY LANGUAGE ───────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-28">
+          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
             <div className="rounded-3xl bg-gradient-to-br from-indigo-950/60 via-zinc-900/80 to-zinc-900/60 border border-indigo-500/20 p-10 sm:p-14 flex flex-col sm:flex-row items-center gap-10">
               <div className="flex-1">
                 <span className="text-[10px] font-bold tracking-[0.3em] text-indigo-400 uppercase">Global Intelligence</span>
@@ -578,7 +574,7 @@ export default function Home() {
           </section>
 
           {/* ── FEATURES GRID ────────────────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-6 pb-32">
+          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-32">
             <div className="text-center mb-14">
               <span className="text-[10px] font-bold tracking-[0.3em] text-sky-500 uppercase">What You Get</span>
               <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Everything you need. Nothing you don't.</h2>
@@ -604,7 +600,7 @@ export default function Home() {
           </section>
 
           {/* ── FINAL CTA ────────────────────────────────── */}
-          <section className="relative z-10 w-full max-w-3xl mx-auto px-6 pb-24 text-center">
+          <section className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24 text-center">
             <div className="rounded-3xl bg-gradient-to-br from-sky-950/60 via-zinc-900/80 to-zinc-900/60 border border-sky-500/20 px-8 py-14">
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
                 Ready to learn faster?<br /><span className="text-sky-400">Your first brief is free.</span>
