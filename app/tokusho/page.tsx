@@ -15,8 +15,8 @@ export default function TokushoPage() {
 
         <div className="divide-y divide-white/10">
           {[
-            { label: "販売業者", value: "【氏名または屋号を入力してください】" },
-            { label: "運営責任者", value: "【氏名を入力してください】" },
+            { label: "販売業者", value: "YT-brief" },
+            { label: "運営責任者", value: "YT-brief" },
             {
               label: "所在地",
               value: "請求があった場合、遅滞なく開示します。メールにてお問い合わせください。",
