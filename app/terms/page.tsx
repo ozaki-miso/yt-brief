@@ -62,7 +62,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">9. Changes to Terms</h2>
-            <p>We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the new Terms. We will notify users of significant changes via email or an in-app notice.</p>
+            <p>We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the new Terms. We may, at our discretion, notify users of significant changes via email or an in-app notice, but are not obligated to do so.</p>
           </section>
 
           <section>

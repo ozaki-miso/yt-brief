@@ -34,7 +34,7 @@ export default function RefundPage() {
             <p>We may, at our sole discretion, issue a refund in the following circumstances:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-zinc-400">
               <li>You were charged in error (e.g., duplicate charge)</li>
-              <li>The Service was completely unavailable for an extended period (&gt;72 hours) due to issues on our end</li>
+              <li>The Service was completely unavailable for an extended period (&gt;72 hours) due to issues solely within our direct control (excludes third-party infrastructure outages)</li>
               <li>Applicable consumer protection law in your jurisdiction requires a refund</li>
             </ul>
             <p className="mt-3">To request a refund under these circumstances, contact us at <span className="text-sky-400">support@yt-brief.com</span> within 7 days of the charge.</p>
@@ -42,7 +42,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">5. Service Discontinuation</h2>
-            <p>In the event that YT-brief discontinues the Service entirely, we will provide at least 30 days&apos; notice and issue pro-rated refunds for any remaining prepaid period where technically and legally feasible.</p>
+            <p>In the event that YT-brief discontinues the Service entirely, we will endeavor to provide reasonable advance notice where possible. As all plans are billed monthly with no prepayment beyond the current period, no pro-rated refunds are owed upon discontinuation.</p>
           </section>
 
           <section>
