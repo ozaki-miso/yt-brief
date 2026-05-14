@@ -15,39 +15,28 @@ export default function RefundPage() {
 
         <div className="space-y-10 text-zinc-300 leading-relaxed">
           <section>
-            <h2 className="text-white font-bold text-xl mb-3">1. General Policy</h2>
-            <p>All purchases of paid subscription plans on YT-brief are <span className="text-white font-semibold">non-refundable</span> unless otherwise stated in this policy or required by applicable law. By subscribing to a paid plan, you acknowledge and agree to this refund policy.</p>
+            <h2 className="text-white font-bold text-xl mb-3">1. No Refund Policy</h2>
+            <p>All purchases of paid subscription plans on YT-brief are <span className="text-white font-semibold">strictly non-refundable</span>. By completing a purchase, you explicitly acknowledge and accept that no refunds will be issued under any circumstances, except where required by mandatory applicable law that cannot be contractually waived.</p>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">2. Monthly Subscriptions</h2>
-            <p>Monthly subscriptions are billed at the start of each billing period. We do not provide refunds for partial months or unused summaries within a billing period. You may cancel your subscription at any time, and access will continue until the end of the current billing period.</p>
+            <p>Monthly subscriptions are billed at the start of each billing period. No refunds will be provided for partial months, unused summaries, or any portion of a billing period, regardless of usage. You may cancel at any time; cancellation takes effect at the end of the current billing cycle.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-xl mb-3">3. Cancellation</h2>
-            <p>You may cancel your subscription at any time from your account settings. Cancellation is effective at the end of the current billing cycle. After cancellation, your account will revert to the Free plan and you will retain access to 3 lifetime summaries.</p>
+            <h2 className="text-white font-bold text-xl mb-3">3. No Complaints or Disputes</h2>
+            <p>By using the Service, you agree to waive any right to file complaints, disputes, or chargebacks with your payment provider or any third party in connection with your subscription, to the fullest extent permitted by law. Any chargeback initiated without prior contact will result in immediate account termination.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-xl mb-3">4. Exceptions</h2>
-            <p>We may, at our sole discretion, issue a refund in the following circumstances:</p>
-            <ul className="list-disc list-inside mt-2 space-y-1 text-zinc-400">
-              <li>You were charged in error (e.g., duplicate charge)</li>
-              <li>The Service was completely unavailable for an extended period (&gt;72 hours) due to issues solely within our direct control (excludes third-party infrastructure outages)</li>
-              <li>Applicable consumer protection law in your jurisdiction requires a refund</li>
-            </ul>
-            <p className="mt-3">To request a refund under these circumstances, contact us at <span className="text-sky-400">support@yt-brief.com</span> within 7 days of the charge.</p>
+            <h2 className="text-white font-bold text-xl mb-3">4. Cancellation</h2>
+            <p>You may cancel your subscription at any time from your account settings. After cancellation, your account reverts to the Free plan at the end of the billing cycle. No credits or refunds are provided for the remaining period.</p>
           </section>
 
           <section>
-            <h2 className="text-white font-bold text-xl mb-3">5. Service Discontinuation</h2>
-            <p>In the event that YT-brief discontinues the Service entirely, we will endeavor to provide reasonable advance notice where possible. As all plans are billed monthly with no prepayment beyond the current period, no pro-rated refunds are owed upon discontinuation.</p>
-          </section>
-
-          <section>
-            <h2 className="text-white font-bold text-xl mb-3">6. Contact</h2>
-            <p>For refund requests or billing questions, please contact us at <span className="text-sky-400">support@yt-brief.com</span>. Please include your account email and the date of the charge in your message.</p>
+            <h2 className="text-white font-bold text-xl mb-3">5. Acknowledgement</h2>
+            <p>You confirm that you have read, understood, and agreed to this No Refund Policy before completing your purchase. If you do not agree, do not subscribe.</p>
           </section>
         </div>
 
