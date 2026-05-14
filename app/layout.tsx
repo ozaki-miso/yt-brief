@@ -16,7 +16,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "YT-brief — Instant YouTube Video Summaries",
   description:
-    "Generate concise, business-ready summaries from YouTube videos in seconds.",
+    "Turn YouTube into your unfair advantage. Get structured insights from any video in 30 seconds — no matter the length or language.",
+  metadataBase: new URL("https://yt-brief.com"),
+  openGraph: {
+    title: "YT-brief — Turn YouTube into your unfair advantage.",
+    description:
+      "The fastest way to extract insights from any video. 1 hr of content → 30 sec brief.",
+    url: "https://yt-brief.com",
+    siteName: "YT-brief",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "YT-brief — Turn YouTube into your unfair advantage.",
+    description:
+      "The fastest way to extract insights from any video. 1 hr of content → 30 sec brief.",
+  },
 };
 
 export default function RootLayout({
