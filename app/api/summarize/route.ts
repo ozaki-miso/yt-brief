@@ -79,7 +79,9 @@ Rules:
     • heading: a crisp 4–6 word noun phrase (no verbs, no punctuation)
     • body: exactly 2–3 sentences, 40–60 words total — enough context to understand WHY it matters, short enough to scan in under 10 seconds
 - Never pad thin content just to reach 5 points. Quality over quantity.
-- If you cannot find a genuine insight for a point, omit it entirely. Do NOT write generic fillers like "No further detail available" or "Key Insight".
+- STRICTLY FORBIDDEN headings: "Key Insight", "Additional Insight", "Further Details", "Other Points", "Miscellaneous", or any other generic placeholder.
+- STRICTLY FORBIDDEN body text: "No further detail available", "No additional information", "Not applicable", or any filler sentence.
+- If you run out of genuine insights before reaching 5 points, STOP and return fewer points. 3 real insights beat 5 padded ones.
 - The takeaway is one punchy, actionable sentence — the single thing worth remembering.`;
 
 function extractVideoId(rawUrl: string): string | null {
@@ -266,6 +268,9 @@ export async function POST(request: Request) {
     const takeaway =
       typeof parsed.takeaway === "string" ? parsed.takeaway.trim() : null;
 
+    const FILLER_HEADINGS = ["key insight", "additional insight", "further details", "other points", "miscellaneous"];
+    const FILLER_BODIES = ["no further detail available", "no additional information", "not applicable", "no detail available"];
+
     type RawPoint = { heading?: unknown; body?: unknown };
     const rawPoints: RawPoint[] = Array.isArray(parsed.points)
       ? (parsed.points as RawPoint[])
@@ -274,19 +279,15 @@ export async function POST(request: Request) {
     const points = rawPoints
       .slice(0, 5)
       .map((p) => ({
-        heading:
-          typeof p.heading === "string" && p.heading.trim()
-            ? p.heading.trim()
-            : "Key Insight",
-        body:
-          typeof p.body === "string" && p.body.trim()
-            ? p.body.trim()
-            : "No detail available.",
-      }));
-
-    while (points.length < 5) {
-      points.push({ heading: "Key Insight", body: "No further detail available." });
-    }
+        heading: typeof p.heading === "string" ? p.heading.trim() : "",
+        body: typeof p.body === "string" ? p.body.trim() : "",
+      }))
+      .filter((p) =>
+        p.heading &&
+        p.body &&
+        !FILLER_HEADINGS.includes(p.heading.toLowerCase()) &&
+        !FILLER_BODIES.some((f) => p.body.toLowerCase().startsWith(f)),
+      );
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
     return NextResponse.json({
