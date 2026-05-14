@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy Policy – YT-brief" };
+export const metadata = { title: "Privacy Policy  EYT-brief" };
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <div className="max-w-3xl mx-auto px-6 py-20">
         <Link href="/" className="text-sky-500 text-sm font-bold hover:text-sky-400 transition-colors">
-          ← Back to YT-brief
+          ↁEBack to YT-brief
         </Link>
 
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight mb-2">Privacy Policy</h1>
@@ -18,10 +18,10 @@ export default function PrivacyPage() {
             <h2 className="text-white font-bold text-xl mb-3">1. Information We Collect</h2>
             <p>We collect the following types of information:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-zinc-400">
-              <li><span className="text-white font-medium">Account information</span> — name, email address, and profile data provided when you sign up via Clerk.</li>
-              <li><span className="text-white font-medium">Usage data</span> — number of summaries used, subscription plan, and usage timestamps stored in your account metadata.</li>
-              <li><span className="text-white font-medium">Payment information</span> — billing details are processed and stored securely by Stripe. We do not store credit card numbers on our servers.</li>
-              <li><span className="text-white font-medium">YouTube URLs</span> — URLs you submit are used solely to fetch publicly available captions and generate summaries. We do not store submitted URLs or generated summaries.</li>
+              <li><span className="text-white font-medium">Account information</span>  Ename, email address, and profile data provided when you sign up via Clerk.</li>
+              <li><span className="text-white font-medium">Usage data</span>  Enumber of summaries used, subscription plan, and usage timestamps stored in your account metadata.</li>
+              <li><span className="text-white font-medium">Payment information</span>  Ebilling details are processed and stored securely by Stripe. We do not store credit card numbers on our servers.</li>
+              <li><span className="text-white font-medium">YouTube URLs</span>  EURLs you submit are used solely to fetch publicly available captions and generate summaries. We do not store submitted URLs or generated summaries.</li>
             </ul>
           </section>
 
@@ -41,9 +41,9 @@ export default function PrivacyPage() {
             <h2 className="text-white font-bold text-xl mb-3">3. Third-Party Services</h2>
             <p>We use the following third-party services, each with their own privacy policies:</p>
             <ul className="list-disc list-inside mt-2 space-y-2 text-zinc-400">
-              <li><span className="text-white font-medium">Clerk</span> — authentication and user management. <a href="https://clerk.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">clerk.com/privacy</a></li>
-              <li><span className="text-white font-medium">Stripe</span> — payment processing. <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">stripe.com/privacy</a></li>
-              <li><span className="text-white font-medium">RapidAPI / YouTube</span> — caption retrieval from publicly available video data.</li>
+              <li><span className="text-white font-medium">Clerk</span>  Eauthentication and user management. <a href="https://clerk.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">clerk.com/privacy</a></li>
+              <li><span className="text-white font-medium">Stripe</span>  Epayment processing. <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">stripe.com/privacy</a></li>
+              <li><span className="text-white font-medium">RapidAPI / YouTube</span>  Ecaption retrieval from publicly available video data.</li>
             </ul>
           </section>
 
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">5. Your Rights</h2>
-            <p>You have the right to access, correct, or delete your personal data at any time. To request data deletion, please contact us at <span className="text-sky-400">support@yt-brief.com</span>. You may also delete your account directly from your account settings.</p>
+            <p>You have the right to access, correct, or delete your personal data at any time. To request data deletion, please contact us at <span className="text-sky-400">takuya08080804@gmail.com</span>. You may also delete your account directly from your account settings.</p>
           </section>
 
           <section>
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">9. Contact</h2>
-            <p>For any privacy-related questions, please contact us at <span className="text-sky-400">support@yt-brief.com</span>.</p>
+            <p>For any privacy-related questions, please contact us at <span className="text-sky-400">takuya08080804@gmail.com</span>.</p>
           </section>
         </div>
 

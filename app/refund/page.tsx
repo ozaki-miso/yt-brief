@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Refund Policy – YT-brief" };
+export const metadata = { title: "Refund Policy  EYT-brief" };
 
 export default function RefundPage() {
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <div className="max-w-3xl mx-auto px-6 py-20">
         <Link href="/" className="text-sky-500 text-sm font-bold hover:text-sky-400 transition-colors">
-          ← Back to YT-brief
+          ↁEBack to YT-brief
         </Link>
 
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight mb-2">Refund Policy</h1>
@@ -36,7 +36,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">5. Service Outage Exception</h2>
-            <p>In the rare event that YT-brief experiences a complete service outage caused solely by issues within our direct control — rendering the Service entirely inaccessible for an extended period — we may, at our sole discretion, issue a refund via Stripe for the affected billing period. To request consideration, contact us at <span className="text-sky-400">support@yt-brief.com</span> within 14 days of the outage. Outages caused by third-party providers (including but not limited to Vercel, Stripe, RapidAPI, or OpenAI) are not eligible.</p>
+            <p>In the rare event that YT-brief experiences a complete service outage caused solely by issues within our direct control  Erendering the Service entirely inaccessible for an extended period  Ewe may, at our sole discretion, issue a refund via Stripe for the affected billing period. To request consideration, contact us at <span className="text-sky-400">takuya08080804@gmail.com</span> within 14 days of the outage. Outages caused by third-party providers (including but not limited to Vercel, Stripe, RapidAPI, or OpenAI) are not eligible.</p>
           </section>
 
           <section>

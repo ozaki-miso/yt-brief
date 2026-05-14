@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Terms of Service – YT-brief" };
+export const metadata = { title: "Terms of Service  EYT-brief" };
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <div className="max-w-3xl mx-auto px-6 py-20">
         <Link href="/" className="text-sky-500 text-sm font-bold hover:text-sky-400 transition-colors">
-          ← Back to YT-brief
+          ↁEBack to YT-brief
         </Link>
 
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight mb-2">Terms of Service</h1>
@@ -67,7 +67,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">10. Contact</h2>
-            <p>For any questions regarding these Terms, please contact us at <span className="text-sky-400">support@yt-brief.com</span>.</p>
+            <p>For any questions regarding these Terms, please contact us at <span className="text-sky-400">takuya08080804@gmail.com</span>.</p>
           </section>
         </div>
 
