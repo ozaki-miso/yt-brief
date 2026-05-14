@@ -640,6 +640,7 @@ export default function Home() {
               <Link href="/terms" className="hover:text-zinc-400 transition-colors">Terms of Service</Link>
               <Link href="/privacy" className="hover:text-zinc-400 transition-colors">Privacy Policy</Link>
               <Link href="/refund" className="hover:text-zinc-400 transition-colors">Refund Policy</Link>
+              <Link href="/tokusho" className="hover:text-zinc-400 transition-colors">特定商取引法に基づく表記</Link>
             </div>
           </footer>
         </>
