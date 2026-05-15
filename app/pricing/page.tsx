@@ -92,7 +92,12 @@ export default function PricingPage() {
 
   function handleSelectPlan(planId: string) {
     if (planId === "free") {
-      router.push("/");
+      // 有料プラン加入中は解約案内（アカウントページへ）
+      if (currentPlan && currentPlan !== "free") {
+        router.push("/account");
+      } else {
+        router.push("/");
+      }
       return;
     }
     // モーダルを開く
@@ -349,7 +354,11 @@ export default function PricingPage() {
                         "disabled:opacity-60 disabled:cursor-not-allowed",
                       ].join(" ")}
                     >
-                      {loadingPlan === plan.id ? "Redirecting…" : "Select Plan"}
+                      {loadingPlan === plan.id
+                        ? "Redirecting…"
+                        : plan.id === "free" && currentPlan && currentPlan !== "free"
+                          ? "Manage Subscription →"
+                          : "Select Plan"}
                     </button>
                   )}
                 </div>
