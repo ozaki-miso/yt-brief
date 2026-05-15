@@ -38,6 +38,15 @@ export async function POST(request: Request) {
   const clerk = await clerkClient();
   const user = await clerk.users.getUser(userId);
 
+  // 既に同じプランに加入している場合はブロック
+  const currentPlan = (user.publicMetadata?.plan as string | undefined) ?? "free";
+  if (currentPlan === planId) {
+    return NextResponse.json(
+      { error: "You are already on this plan. Manage your subscription from your account page." },
+      { status: 400 },
+    );
+  }
+
   // Clerkのmetadataに保存済みのStripe顧客IDを再利用する
   const existingCustomerId =
     typeof user.privateMetadata?.stripeCustomerId === "string"

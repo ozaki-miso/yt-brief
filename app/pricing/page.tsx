@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 type BasePlan = {
   id: "free" | "starter" | "pro";
@@ -74,10 +75,20 @@ function CheckIcon() {
 
 export default function PricingPage() {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isSignedIn) return;
+    fetch("/api/account")
+      .then((r) => r.json())
+      .then((d: { plan?: string }) => setCurrentPlan(d.plan ?? "free"))
+      .catch(() => null);
+  }, [isSignedIn]);
 
   function handleSelectPlan(planId: string) {
     if (planId === "free") {
@@ -320,21 +331,27 @@ export default function PricingPage() {
                 </ul>
 
                 <div className="mt-10">
-                  <button
-                    type="button"
-                    disabled={loadingPlan !== null}
-                    onClick={() => handleSelectPlan(plan.id)}
-                    className={[
-                      isPro
-                        ? "w-full rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-4 py-[14px] text-[15px] font-semibold text-white shadow-[0_26px_70px_-32px_rgb(129_140_248/0.9),0_18px_50px_-38px_rgb(217_70_239/0.55)] ring-1 ring-white/30 transition-[filter,transform] hover:brightness-110 active:translate-y-[0.5px]"
-                        : isPaid
-                          ? "w-full rounded-xl border border-white/16 bg-white/[0.065] px-4 py-[14px] text-[15px] font-semibold text-white transition-colors hover:border-white/25 hover:bg-white/[0.1]"
-                          : "w-full rounded-xl border border-white/12 bg-transparent px-4 py-[14px] text-[15px] font-semibold text-zinc-50 transition-colors hover:border-white/20 hover:bg-white/[0.035]",
-                      "disabled:opacity-60 disabled:cursor-not-allowed",
-                    ].join(" ")}
-                  >
-                    {loadingPlan === plan.id ? "Redirecting…" : "Select Plan"}
-                  </button>
+                  {currentPlan === plan.id ? (
+                    <div className="w-full rounded-xl border border-sky-500/40 bg-sky-500/10 px-4 py-[14px] text-[15px] font-semibold text-sky-400 text-center">
+                      ✓ Current Plan
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={loadingPlan !== null}
+                      onClick={() => handleSelectPlan(plan.id)}
+                      className={[
+                        isPro
+                          ? "w-full rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-4 py-[14px] text-[15px] font-semibold text-white shadow-[0_26px_70px_-32px_rgb(129_140_248/0.9),0_18px_50px_-38px_rgb(217_70_239/0.55)] ring-1 ring-white/30 transition-[filter,transform] hover:brightness-110 active:translate-y-[0.5px]"
+                          : isPaid
+                            ? "w-full rounded-xl border border-white/16 bg-white/[0.065] px-4 py-[14px] text-[15px] font-semibold text-white transition-colors hover:border-white/25 hover:bg-white/[0.1]"
+                            : "w-full rounded-xl border border-white/12 bg-transparent px-4 py-[14px] text-[15px] font-semibold text-zinc-50 transition-colors hover:border-white/20 hover:bg-white/[0.035]",
+                        "disabled:opacity-60 disabled:cursor-not-allowed",
+                      ].join(" ")}
+                    >
+                      {loadingPlan === plan.id ? "Redirecting…" : "Select Plan"}
+                    </button>
+                  )}
                 </div>
               </div>
             );
