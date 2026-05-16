@@ -477,6 +477,18 @@ export default function Home() {
                       </div>
                     </div>
                   )}
+
+                  <div className="mt-8 pt-6 border-t border-white/5 text-center">
+                    <p className="text-zinc-600 text-xs">
+                      Have feedback?{" "}
+                      <a
+                        href="mailto:takuya08080804@gmail.com"
+                        className="text-zinc-500 hover:text-sky-400 transition-colors underline underline-offset-2"
+                      >
+                        takuya08080804@gmail.com
+                      </a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
