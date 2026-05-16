@@ -36,7 +36,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">5. Service Outage Exception</h2>
-            <p>In the rare event that YT-brief experiences a complete service outage caused solely by issues within our direct control — rendering the Service entirely inaccessible for an extended period — we may, at our sole discretion, issue a refund via Stripe for the affected billing period. To request consideration, contact us at <span className="text-sky-400">takuya08080804@gmail.com</span> within 14 days of the outage. Outages caused by third-party providers (including but not limited to Vercel, Stripe, RapidAPI, or OpenAI) are not eligible.</p>
+            <p>In the rare event that YT-brief experiences a complete service outage caused solely by issues within our direct control — rendering the Service entirely inaccessible for an extended period — we may, at our sole discretion, issue a refund via Stripe for the affected billing period. To request consideration, contact us at <span className="text-sky-400">takuya08080804@gmail.com</span> within 14 days of the outage. Outages caused by third-party infrastructure providers are not eligible.</p>
           </section>
 
           <section>
