@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export const metadata = { title: "Terms of Service  EYT-brief" };
+export const metadata = { title: "Terms of Service | YT-brief" };
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <div className="max-w-3xl mx-auto px-6 py-20">
         <Link href="/" className="text-sky-500 text-sm font-bold hover:text-sky-400 transition-colors">
-          ↁEBack to YT-brief
+          ← Back to YT-brief
         </Link>
 
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight mb-2">Terms of Service</h1>
@@ -26,7 +26,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">3. Accuracy Disclaimer</h2>
-            <p>Summaries are provided &ldquo;as-is&rdquo; and may not be 100% accurate, complete, or up to date. YT-brief makes no warranties regarding the accuracy, reliability, or fitness of the summaries for any particular purpose. You are solely responsible for how you use the information provided.</p>
+            <p>Summaries are provided &ldquo;as-is&rdquo; and may not be fully accurate, complete, or current. YT-brief makes no warranties regarding the accuracy, reliability, or fitness for a particular purpose of any summary. You are solely responsible for how you use the information provided.</p>
           </section>
 
           <section>
@@ -40,19 +40,19 @@ export default function TermsPage() {
             <ul className="list-disc list-inside mt-2 space-y-1 text-zinc-400">
               <li>Violate any applicable laws or regulations</li>
               <li>Infringe on the intellectual property rights of others</li>
-              <li>Attempt to reverse engineer, scrape, or abuse the Service</li>
+              <li>Attempt to reverse-engineer, scrape, or abuse the Service</li>
               <li>Resell or redistribute summaries for commercial purposes without permission</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">6. Subscriptions and Billing</h2>
-            <p>Paid plans are billed monthly. Your subscription will automatically renew each month unless cancelled. You may cancel at any time through your account settings. Cancellation takes effect at the end of the current billing period. Please refer to our <Link href="/refund" className="text-sky-400 hover:underline">Refund Policy</Link> for details on refunds.</p>
+            <p>Paid plans are billed monthly. Your subscription will automatically renew each month unless canceled. You may cancel at any time through your account settings. Cancellation takes effect at the end of the current billing period. Please refer to our <Link href="/refund" className="text-sky-400 hover:underline">Refund Policy</Link> for details.</p>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">7. Service Availability</h2>
-            <p>We reserve the right to modify, suspend, or discontinue the Service at any time, with or without notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Service.</p>
+            <p>We reserve the right to modify, suspend, or discontinue the Service at any time, with or without notice. We shall not be liable to you or any third party for any such modification, suspension, or discontinuation.</p>
           </section>
 
           <section>
@@ -62,12 +62,12 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">9. Changes to Terms</h2>
-            <p>We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the new Terms. We may, at our discretion, notify users of significant changes via email or an in-app notice, but are not obligated to do so.</p>
+            <p>We may update these Terms from time to time. Continued use of the Service after any changes constitutes your acceptance of the new Terms. We may, at our discretion, notify users of significant changes via email or an in-app notice, but are not obligated to do so.</p>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">10. Contact</h2>
-            <p>For any questions regarding these Terms, please contact us at <span className="text-sky-400">takuya08080804@gmail.com</span>.</p>
+            <p>For any questions about these Terms, please contact us at <span className="text-sky-400">takuya08080804@gmail.com</span>.</p>
           </section>
         </div>
 

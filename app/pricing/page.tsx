@@ -26,11 +26,11 @@ const plans = [
   {
     id: "free",
     name: "Free",
-    description: "Experience the power of instant insights.",
+    description: "Try it free — no account needed.",
     features: [
       "Your first brief is on us",
       "No account or card required",
-      "High-quality condensed output",
+      "High-quality, structured summaries",
     ],
   },
   {
@@ -39,7 +39,7 @@ const plans = [
     monthlyPrice: "$4.99",
     description: "Ideal for students and casual learners.",
     features: [
-      "30 summaries every month",
+      "30 summaries per month",
       "Summarize videos of any length",
       "Standard processing speed",
     ],
@@ -51,8 +51,8 @@ const plans = [
     monthlyPrice: "$8.99",
     description: "For professionals who value their time.",
     features: [
-      "100 summaries every month",
-      "Priority instant processing",
+      "100 summaries per month",
+      "Priority processing",
       "Early access to new features",
     ],
   },
@@ -231,7 +231,7 @@ export default function PricingPage() {
             href="/"
             className="rounded-full border border-white/10 px-4 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-white/20 hover:bg-white/[0.04] hover:text-white"
           >
-            Back to summary
+            Back to home
           </Link>
         </header>
 
@@ -300,7 +300,7 @@ export default function PricingPage() {
                 <ul className="mt-8 flex-1 space-y-3.5">
                   {plan.features.map((feature) => {
                     const isUnlimitedHighlight =
-                      isPro && feature === "100 summaries every month";
+                      isPro && feature === "100 summaries per month";
                     return (
                       <li
                         key={feature}

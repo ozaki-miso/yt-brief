@@ -113,7 +113,7 @@ export default function Home() {
       if (res.status === 401) throw new Error("Please sign in to use YT-brief.");
       if (res.status === 403) {
         setUpgradeRequired(true);
-        throw new Error(data.error ?? "Summary limit reached.");
+        throw new Error(data.error ?? "You've reached your summary limit.");
       }
       throw new Error(data.error ?? "Could not process this video.");
     }
@@ -160,7 +160,7 @@ export default function Home() {
         await runSummarize(raw, controller.signal);
       } catch (err) {
         setPhase("idle");
-        setFormError(err instanceof Error ? err.message : "Error occurred.");
+        setFormError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       }
     })();
   }
@@ -289,7 +289,7 @@ export default function Home() {
                   <p className="text-sky-300 font-semibold mb-1">
                     {anonLimitReached && !upgradeRequired
                       ? "You've used your free brief"
-                      : "Summary limit reached"}
+                      : "You've hit your summary limit"}
                   </p>
                   <p className="text-zinc-400 text-sm mb-4">
                     {anonLimitReached && !upgradeRequired
@@ -330,7 +330,7 @@ export default function Home() {
             <div className="py-20 flex flex-col items-center animate-pulse">
               <ScanningNetworkGraphic />
               <h2 className="mt-12 text-2xl font-bold tracking-tight uppercase italic tracking-[0.2em]">Analyzing...</h2>
-              <p className="text-zinc-500 mt-2 text-sm italic">YT-Brief Engine is scanning and structuring the content.</p>
+              <p className="text-zinc-500 mt-2 text-sm italic">Analyzing the video and building your brief.</p>
             </div>
           )}
 
@@ -356,7 +356,7 @@ export default function Home() {
               )}
               <div className="flex justify-between items-center mb-8">
                 <button onClick={() => setPhase("idle")} className="text-xs font-bold text-zinc-500 hover:text-white transition-colors tracking-widest uppercase">
-                  ← New Analysis
+                  ← New Brief
                 </button>
                 <div className="flex items-center gap-2">
                   {/* X (Twitter) share */}
@@ -393,7 +393,7 @@ export default function Home() {
                     }}
                     className="text-xs font-bold bg-white text-black px-5 py-2.5 rounded-full hover:bg-sky-400 hover:text-white transition-all shadow-lg"
                   >
-                    {copied ? "COPIED!" : "COPY REPORT"}
+                    {copied ? "Copied!" : "Copy Report"}
                   </button>
                 </div>
               </div>

@@ -5,7 +5,7 @@ import { useUser, UserButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
 const PLAN_LABELS: Record<string, { label: string; color: string; limit: number; limitLabel: string }> = {
-  free:    { label: "Free",    color: "text-zinc-400",   limit: 3,   limitLabel: "3 summaries lifetime" },
+  free:    { label: "Free",    color: "text-zinc-400",   limit: 3,   limitLabel: "3 summaries (lifetime)" },
   starter: { label: "Starter", color: "text-sky-400",    limit: 30,  limitLabel: "30 summaries / month" },
   pro:     { label: "Pro",     color: "text-indigo-400", limit: 100, limitLabel: "100 summaries / month" },
 };
@@ -103,7 +103,7 @@ export default function AccountPage() {
         <div className="bg-zinc-900 rounded-2xl border border-white/[0.08] p-6 flex items-center gap-4">
           {user.imageUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.imageUrl} alt="avatar" className="w-14 h-14 rounded-full" />
+            <img src={user.imageUrl} alt="Profile photo" className="w-14 h-14 rounded-full" />
           )}
           <div>
             <p className="font-bold text-lg leading-tight">{user.fullName ?? user.username ?? "—"}</p>
@@ -154,7 +154,7 @@ export default function AccountPage() {
               <div className="flex items-end justify-between">
                 <div className="flex items-end gap-2">
                   <span className="text-4xl font-extrabold text-white">{usageCount}</span>
-                  <span className="text-zinc-500 text-sm pb-1">/ {planInfo.limit} used</span>
+                  <span className="text-zinc-500 text-sm pb-1">of {planInfo.limit} used</span>
                 </div>
                 <span className={`text-sm font-bold ${remaining === 0 ? "text-amber-400" : "text-sky-400"}`}>
                   {remaining} remaining
