@@ -2,6 +2,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { YoutubeTranscript } from "youtube-transcript";
+import { saveHistory } from "@/lib/redis";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -289,6 +290,16 @@ export async function POST(request: Request) {
       );
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+    // ログイン済みなら履歴を保存
+    if (userId) {
+      try {
+        await saveHistory(userId, { url, title, thumbnailUrl, takeaway, points });
+      } catch (e) {
+        console.error("History save failed:", e);
+      }
+    }
+
     return NextResponse.json({
       url,
       title,

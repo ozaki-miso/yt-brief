@@ -203,6 +203,9 @@ export default function Home() {
             </SignUpButton>
           </Show>
           <Show when="signed-in">
+            <Link href="/history" className="text-sm font-bold text-zinc-400 hover:text-white px-3 sm:px-4 py-2 rounded-lg transition-all hidden sm:block">
+              History
+            </Link>
             <Link href="/account" className="text-sm font-bold text-zinc-400 hover:text-white px-3 sm:px-4 py-2 rounded-lg transition-all hidden sm:block">
               My Account
             </Link>
