@@ -591,10 +591,10 @@ export default function Home() {
                 { emoji: "🌍", title: "Works worldwide", body: "Videos from any country, any platform — as long as it's on YouTube." },
                 { emoji: "🧠", title: "Proprietary analysis engine", body: "Our in-house intelligence engine extracts and structures the key insights for you." },
                 { emoji: "📋", title: "Copy & share", body: "Export your brief as clean text and share it with your team instantly." },
+                { emoji: "🗂️", title: "Brief history", body: "All your past briefs saved in one place. Revisit any summary anytime — available on paid plans." },
                 { emoji: "🎓", title: "Lectures & courses", body: "Catch up on online classes or research talks without watching every minute." },
                 { emoji: "📰", title: "News & documentaries", body: "Stay informed across languages without reading long articles." },
                 { emoji: "🚀", title: "Creator research", body: "Analyze competitor videos and trending topics in seconds." },
-                { emoji: "🔒", title: "No data stored", body: "Your briefs stay on your screen. We never store your video content." },
               ].map(({ emoji, title, body }) => (
                 <div key={title} className="rounded-2xl bg-zinc-900/40 border border-white/5 p-6 hover:bg-zinc-900/70 hover:border-white/10 transition-all">
                   <div className="text-2xl mb-3">{emoji}</div>
