@@ -399,32 +399,52 @@ export default function Home() {
               </div>
 
               <div className="bg-zinc-900 rounded-[32px] overflow-hidden border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
-                {result.thumbnailUrl && (
-                  <div className="w-full aspect-video overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={result.thumbnailUrl}
-                      alt={result.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const img = e.currentTarget;
-                        if (!img.src.includes("hqdefault")) {
-                          img.src = img.src.replace("maxresdefault", "hqdefault");
-                        } else {
-                          img.style.display = "none";
-                          (img.parentElement as HTMLElement).style.display = "none";
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="p-8 sm:p-12 bg-gradient-to-br from-zinc-800/30 to-transparent border-b border-white/5">
+                <div className="p-6 sm:p-10 bg-gradient-to-br from-zinc-800/30 to-transparent border-b border-white/5">
                   <div className="inline-block px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-bold tracking-widest uppercase mb-4">
                     Intelligence Report
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-black leading-tight text-white uppercase italic tracking-tighter">
-                    {result.title}
-                  </h2>
+                  <div className="flex items-start gap-4">
+                    {result.thumbnailUrl && (
+                      <a
+                        href={result.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0 w-28 sm:w-36 rounded-xl overflow-hidden border border-white/10 hover:border-sky-500/40 transition-colors"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={result.thumbnailUrl}
+                          alt={result.title}
+                          className="w-full aspect-video object-cover"
+                          onError={(e) => {
+                            const img = e.currentTarget;
+                            if (!img.src.includes("hqdefault")) {
+                              img.src = img.src.replace("maxresdefault", "hqdefault");
+                            } else {
+                              img.style.display = "none";
+                              (img.parentElement as HTMLElement).style.display = "none";
+                            }
+                          }}
+                        />
+                      </a>
+                    )}
+                    <div className="min-w-0">
+                      <h2 className="text-xl sm:text-2xl font-black leading-tight text-white uppercase italic tracking-tighter mb-2">
+                        {result.title}
+                      </h2>
+                      <a
+                        href={result.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-sky-400 transition-colors truncate max-w-full"
+                      >
+                        <svg className="shrink-0 w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.84 1.56V6.81a4.85 4.85 0 0 1-1.07-.12z"/>
+                        </svg>
+                        Watch on YouTube
+                      </a>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="p-5 sm:p-12 space-y-8 sm:space-y-12">
