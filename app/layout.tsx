@@ -18,7 +18,10 @@ export const metadata: Metadata = {
   title: "YT-brief — Instant YouTube Video Summaries",
   description:
     "Turn YouTube into your unfair advantage. Get structured insights from any video in 30 seconds — no matter the length or language.",
-  metadataBase: new URL("https://yt-brief.com"),
+  metadataBase: new URL("https://www.yt-brief.com"),
+  verification: {
+    google: "-hGKlm2jhrg-YcPDbM7wjowhXUorGhYHujU_KzgEWwE",
+  },
   openGraph: {
     title: "YT-brief — Turn YouTube into your unfair advantage.",
     description:
