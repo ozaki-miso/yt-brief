@@ -490,7 +490,7 @@ export default function Home() {
                     <div className="rounded-2xl bg-gradient-to-r from-sky-950/60 to-zinc-900/60 border border-sky-500/20 px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
                         <p className="text-white font-bold text-sm">Want unlimited briefs?</p>
-                        <p className="text-zinc-400 text-xs mt-0.5">Get 30 briefs/month for just $4.99 — cancel anytime.</p>
+                        <p className="text-zinc-400 text-xs mt-0.5">Get 30 briefs/month + history saved for just $4.99 — cancel anytime.</p>
                       </div>
                       <Link
                         href="/pricing"

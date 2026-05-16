@@ -11,6 +11,7 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [plan, setPlan] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoaded || !user) return;
@@ -19,6 +20,10 @@ export default function HistoryPage() {
       .then((d: { history?: HistoryItem[] }) => setHistory(d.history ?? []))
       .catch(() => null)
       .finally(() => setLoading(false));
+    fetch("/api/account")
+      .then((r) => r.json())
+      .then((d: { plan?: string }) => setPlan(d.plan ?? "free"))
+      .catch(() => null);
   }, [isLoaded, user]);
 
   async function handleDelete(id: string) {
@@ -60,6 +65,22 @@ export default function HistoryPage() {
           <h1 className="text-3xl font-black tracking-tight">Your Briefs</h1>
           <p className="text-zinc-500 text-sm mt-1">{history.length} saved {history.length === 1 ? "brief" : "briefs"}</p>
         </div>
+
+        {/* Free plan upgrade banner */}
+        {plan === "free" && (
+          <div className="mb-8 rounded-2xl bg-gradient-to-r from-sky-950/60 to-zinc-900/60 border border-sky-500/20 px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-white font-bold text-sm">History is a paid feature</p>
+              <p className="text-zinc-400 text-xs mt-0.5">Upgrade to save and revisit all your briefs anytime.</p>
+            </div>
+            <Link
+              href="/pricing"
+              className="shrink-0 bg-sky-500 hover:bg-sky-400 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+            >
+              Upgrade →
+            </Link>
+          </div>
+        )}
 
         {history.length === 0 ? (
           <div className="rounded-2xl bg-zinc-900 border border-white/5 p-12 text-center">

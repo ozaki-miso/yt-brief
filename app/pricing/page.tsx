@@ -40,6 +40,7 @@ const plans = [
     description: "Ideal for students and casual learners.",
     features: [
       "30 summaries per month",
+      "Brief history saved",
       "Summarize videos of any length",
       "Standard processing speed",
     ],
@@ -52,6 +53,7 @@ const plans = [
     description: "For professionals who value their time.",
     features: [
       "100 summaries per month",
+      "Brief history saved",
       "Priority processing",
       "Early access to new features",
     ],
