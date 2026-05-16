@@ -466,59 +466,6 @@ export default function Home() {
 
       {phase === "idle" && (
         <>
-          {/* ── TESTIMONIALS ─────────────────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
-            <div className="text-center mb-14">
-              <span className="text-[10px] font-bold tracking-[0.3em] text-sky-500 uppercase">What People Are Saying</span>
-              <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Real people. Real time saved.</h2>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-6">
-              {[
-                {
-                  quote: "I have a 2-hour commute every day. I used to just scroll social media. Now I get through 10+ videos worth of insights before I even reach the office. It's like having a personal research assistant.",
-                  name: "Marcus T.",
-                  role: "PhD Student, UC Berkeley",
-                  avatar: "M",
-                  color: "bg-violet-500",
-                },
-                {
-                  quote: "I was spending 3+ hours a week watching competitor videos. YT-brief cut that down to 15 minutes. That time goes straight back into creating. Easily the best $5 I spend each month.",
-                  name: "Priya S.",
-                  role: "YouTube Creator · 280K subs",
-                  avatar: "P",
-                  color: "bg-pink-500",
-                },
-                {
-                  quote: "My job requires staying on top of global markets — including Japanese and Korean financial content. YT-brief distills hours of foreign-language video into a clean brief in seconds. Hours saved every single week.",
-                  name: "David K.",
-                  role: "Hedge Fund Analyst, NYC",
-                  avatar: "D",
-                  color: "bg-sky-500",
-                },
-              ].map(({ quote, name, role, avatar, color }) => (
-                <div key={name} className="flex flex-col justify-between rounded-2xl bg-zinc-900/60 border border-white/5 p-7 hover:border-white/10 transition-colors">
-                  <div>
-                    <div className="flex gap-0.5 mb-5">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} viewBox="0 0 20 20" fill="rgb(234 179 8)" className="w-4 h-4"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                      ))}
-                    </div>
-                    <p className="text-zinc-300 text-sm leading-relaxed mb-6">&ldquo;{quote}&rdquo;</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full ${color} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                      {avatar}
-                    </div>
-                    <div>
-                      <p className="text-white text-sm font-semibold">{name}</p>
-                      <p className="text-zinc-500 text-xs">{role}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
           {/* ── HOW IT WORKS ─────────────────────────────── */}
           <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
             <div className="text-center mb-14">
@@ -570,48 +517,6 @@ export default function Home() {
                   <p className="text-zinc-500 text-sm leading-relaxed">{body}</p>
                 </div>
               ))}
-            </div>
-          </section>
-
-          {/* ── TRANSLATE ANY LANGUAGE ───────────────────── */}
-          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
-            <div className="rounded-3xl bg-gradient-to-br from-indigo-950/60 via-zinc-900/80 to-zinc-900/60 border border-indigo-500/20 p-10 sm:p-14 flex flex-col sm:flex-row items-center gap-10">
-              <div className="flex-1">
-                <span className="text-[10px] font-bold tracking-[0.3em] text-indigo-400 uppercase">Global Intelligence</span>
-                <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-                  Any language.<br /><span className="text-indigo-400">Zero barriers.</span>
-                </h2>
-                <p className="mt-5 text-zinc-400 leading-relaxed max-w-md">
-                  Japanese tech talk? Spanish documentary? Korean business lecture? No matter where the video is from, YT-brief automatically detects the language and delivers a clear, structured brief.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  {["🇯🇵 Japanese","🇰🇷 Korean","🇨🇳 Chinese","🇪🇸 Spanish","🇫🇷 French","🇩🇪 German","🇵🇹 Portuguese","🇮🇳 Hindi","+ more"].map((lang) => (
-                    <span key={lang} className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-zinc-300">{lang}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="shrink-0 flex flex-col items-center gap-3 select-none">
-                <div className="flex gap-2 text-3xl">
-                  {["🇯🇵","🇰🇷","🇪🇸","🇫🇷"].map(f => <span key={f} className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 border border-white/10">{f}</span>)}
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex gap-1">
-                    {[0,1,2,3].map(i => <div key={i} className="w-0.5 h-5 bg-indigo-500/40 rounded-full" style={{animationDelay:`${i*0.15}s`}} />)}
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="rgb(129 140 248)" strokeWidth="1.5" className="w-5 h-5">
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M3 12h18M12 3c-2.5 3-4 5.5-4 9s1.5 6 4 9M12 3c2.5 3 4 5.5 4 9s-1.5 6-4 9" />
-                    </svg>
-                  </div>
-                  <div className="flex gap-1">
-                    {[0,1,2,3].map(i => <div key={i} className="w-0.5 h-5 bg-sky-500/40 rounded-full" style={{animationDelay:`${i*0.15}s`}} />)}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-500/10 border border-sky-500/30">
-                  <span className="text-sky-400 font-bold text-sm">✦ Instant Brief</span>
-                </div>
-              </div>
             </div>
           </section>
 
