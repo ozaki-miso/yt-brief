@@ -54,8 +54,8 @@ const plans = [
     features: [
       "100 summaries per month",
       "Brief history saved",
-      "Priority processing",
-      "Early access to new features",
+      "Best value per summary",
+      "Same fast processing speed",
     ],
   },
 ] as const satisfies readonly (FreePlan | PaidPlan)[];
