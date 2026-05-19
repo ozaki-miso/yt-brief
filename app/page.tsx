@@ -230,7 +230,7 @@ export default function Home() {
                 <span className="text-sky-400">your unfair advantage.</span>
               </h1>
               <p className="text-base sm:text-lg text-zinc-400 mb-4 sm:mb-5 max-w-lg mx-auto leading-relaxed">
-                The fastest way to extract insights from any video — no matter the length, no matter the language.
+                The fastest way to summarize any YouTube video — long or short, in any language with captions.
               </p>
 
               {/* Target audience pills */}
@@ -323,7 +323,7 @@ export default function Home() {
                 </div>
               ) : (
                 <p className="text-xs text-zinc-600 font-medium mt-3">
-                  No credit card · No sign‑up · First brief free in seconds
+                  Try once without signing up · Sign in for 3 free summaries · No credit card
                 </p>
               )}
             </div>
@@ -489,7 +489,7 @@ export default function Home() {
                     {/* CTA バナー */}
                     <div className="rounded-2xl bg-gradient-to-r from-sky-950/60 to-zinc-900/60 border border-sky-500/20 px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
-                        <p className="text-white font-bold text-sm">Want unlimited briefs?</p>
+                        <p className="text-white font-bold text-sm">Need more briefs?</p>
                         <p className="text-zinc-400 text-xs mt-0.5">Get 30 briefs/month + history saved for just $4.99 — cancel anytime.</p>
                       </div>
                       <Link
@@ -650,8 +650,8 @@ export default function Home() {
                       <path d="M12 7v5l3 3" strokeLinecap="round" />
                     </svg>
                   ),
-                  title: "Our engine reads the entire video",
-                  body: "YT-brief extracts the transcript and runs it through our proprietary analysis engine in seconds.",
+                  title: "Our engine analyzes the transcript",
+                  body: "YT-brief fetches the video's captions and runs them through our proprietary analysis engine in seconds.",
                 },
                 {
                   step: "03",
@@ -686,7 +686,7 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 { emoji: "⚡", title: "30-second briefs", body: "No more scrubbing through hour-long videos for a single insight." },
-                { emoji: "🌍", title: "Works worldwide", body: "Videos from any country, any platform — as long as it's on YouTube." },
+                { emoji: "🌍", title: "Works worldwide", body: "Videos from any country — as long as they're on YouTube and have captions available." },
                 { emoji: "🧠", title: "Proprietary analysis engine", body: "Our in-house intelligence engine extracts and structures the key insights for you." },
                 { emoji: "📋", title: "Copy & share", body: "Export your brief as clean text and share it with your team instantly." },
                 { emoji: "🗂️", title: "Brief history", body: "All your past briefs saved in one place. Revisit any summary anytime — available on paid plans." },

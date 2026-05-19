@@ -31,7 +31,7 @@ type UsageMeta = {
 };
 
 async function checkAndIncrementUsage(userId: string): Promise<
-  | { allowed: true; remaining: number }
+  | { allowed: true; remaining: number; plan: string }
   | { allowed: false; error: string; remaining: number }
 > {
   const clerk = await clerkClient();
@@ -65,7 +65,7 @@ async function checkAndIncrementUsage(userId: string): Promise<
     },
   });
 
-  return { allowed: true, remaining: limit - (count + 1) };
+  return { allowed: true, remaining: limit - (count + 1), plan };
 }
 
 const SYSTEM_PROMPT = `You are an elite intelligence analyst who transforms video content into must-read briefings.
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
   const { userId } = await auth();
 
   // 未ログインはクライアント側 localStorage で1回制限（サーバーは通過させる）
-  let usageResult: { allowed: true; remaining: number } | null = null;
+  let usageResult: { allowed: true; remaining: number; plan: string } | null = null;
   if (userId) {
     const result = await checkAndIncrementUsage(userId);
     if (!result.allowed) {
@@ -309,8 +309,8 @@ export async function POST(request: Request) {
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
-    // ログイン済みなら履歴を保存
-    if (userId) {
+    // 有料プランのユーザーのみ履歴を保存
+    if (userId && usageResult && usageResult.plan !== "free") {
       try {
         await saveHistory(userId, { url, title, thumbnailUrl, takeaway, points });
       } catch (e) {

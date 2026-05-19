@@ -21,7 +21,7 @@ export default function PrivacyPage() {
               <li><span className="text-white font-medium">Account information:</span> your name, email address, and profile data provided when you sign up via Clerk.</li>
               <li><span className="text-white font-medium">Usage data:</span> number of summaries used, subscription plan, and usage timestamps stored in your account metadata.</li>
               <li><span className="text-white font-medium">Payment information:</span> billing details are processed and stored securely by Stripe. We do not store credit card numbers on our servers.</li>
-              <li><span className="text-white font-medium">YouTube URLs:</span> URLs you submit are used solely to fetch publicly available captions and generate summaries. We do not store submitted URLs or generated summaries.</li>
+              <li><span className="text-white font-medium">YouTube URLs and summaries:</span> URLs you submit are used to fetch publicly available captions and generate summaries. For signed-in users, the URL, video title, and generated summary content are saved to your brief history and retained until you delete them or close your account.</li>
             </ul>
           </section>
 
@@ -43,13 +43,15 @@ export default function PrivacyPage() {
             <ul className="list-disc list-inside mt-2 space-y-2 text-zinc-400">
               <li><span className="text-white font-medium">Clerk:</span> authentication and user management. <a href="https://clerk.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">clerk.com/privacy</a></li>
               <li><span className="text-white font-medium">Stripe:</span> payment processing. <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">stripe.com/privacy</a></li>
-              <li><span className="text-white font-medium">RapidAPI / YouTube:</span> caption retrieval from publicly available video data.</li>
+              <li><span className="text-white font-medium">Supadata / YouTube:</span> caption retrieval from publicly available video data.</li>
+              <li><span className="text-white font-medium">OpenAI:</span> AI processing to generate summaries. The video transcript text is sent to OpenAI's API. No personally identifiable information is included.</li>
+              <li><span className="text-white font-medium">Upstash:</span> cloud database used to store brief history for signed-in users.</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-white font-bold text-xl mb-3">4. Data Retention</h2>
-            <p>We retain your account information for as long as your account is active. Usage counters and subscription metadata are stored in your account and deleted when you close your account. We do not retain video URLs or summaries after your session ends.</p>
+            <p>We retain your account information for as long as your account is active. Usage counters and subscription metadata are stored in your account and deleted when you close your account. For signed-in users, brief history (URL, title, and summary content) is retained until you delete individual items, or until your account is closed. Anonymous users' submitted URLs are not stored after the session ends.</p>
           </section>
 
           <section>

@@ -28,9 +28,9 @@ const plans = [
     name: "Free",
     description: "Try it free — no account needed.",
     features: [
-      "Your first brief is on us",
-      "No account or card required",
-      "High-quality, structured summaries",
+      "1 brief without signing up",
+      "3 summaries after free sign-up",
+      "No credit card required",
     ],
   },
   {
