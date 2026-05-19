@@ -525,6 +525,90 @@ export default function Home() {
 
       {phase === "idle" && (
         <>
+          {/* ── PRODUCT PREVIEW ───────────────────────────── */}
+          <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+            <div className="text-center mb-10">
+              <span className="text-[10px] font-bold tracking-[0.3em] text-sky-500 uppercase">See It In Action</span>
+              <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Paste a URL. Get your brief.</h2>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6 items-start">
+              {/* LEFT: Input mock */}
+              <div className="rounded-2xl bg-zinc-900 border border-white/8 overflow-hidden shadow-[0_24px_60px_-16px_rgba(0,0,0,0.6)]">
+                {/* Browser chrome */}
+                <div className="flex items-center gap-1.5 px-4 py-3 bg-zinc-800/60 border-b border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                  <div className="ml-3 flex-1 bg-zinc-700/50 rounded-md h-5 flex items-center px-2">
+                    <span className="text-zinc-500 text-[10px]">yt-brief.com</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-zinc-500 text-[10px] font-bold tracking-widest uppercase mb-3">Step 1 — Paste your URL</p>
+                  {/* URL input mock */}
+                  <div className="rounded-xl bg-zinc-800 border border-white/10 px-4 py-3 flex items-center gap-3 mb-4">
+                    <svg className="w-4 h-4 text-red-500 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.27 8.27 0 0 0 4.84 1.56V6.81a4.85 4.85 0 0 1-1.07-.12z"/>
+                    </svg>
+                    <span className="text-zinc-400 text-xs">https://youtube.com/watch?v=...</span>
+                  </div>
+                  <div className="w-full rounded-xl bg-sky-500 py-2.5 text-center text-xs font-bold text-white shadow-[0_0_20px_rgba(56,189,248,0.35)]">
+                    Summarize →
+                  </div>
+                  <div className="mt-4 flex items-center gap-2">
+                    <div className="flex-1 h-px bg-white/5" />
+                    <span className="text-zinc-600 text-[10px]">works with any public video</span>
+                    <div className="flex-1 h-px bg-white/5" />
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT: Summary output mock */}
+              <div className="rounded-2xl bg-zinc-900 border border-white/8 overflow-hidden shadow-[0_24px_60px_-16px_rgba(0,0,0,0.6)]">
+                {/* Browser chrome */}
+                <div className="flex items-center gap-1.5 px-4 py-3 bg-zinc-800/60 border-b border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                  <div className="ml-3 flex-1 bg-zinc-700/50 rounded-md h-5 flex items-center px-2">
+                    <span className="text-zinc-500 text-[10px]">yt-brief.com</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="text-zinc-500 text-[10px] font-bold tracking-widest uppercase mb-3">Step 2 — Read your brief</p>
+                  {/* Intelligence report label */}
+                  <div className="inline-flex items-center px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[9px] font-bold tracking-widest uppercase mb-3">
+                    Intelligence Report
+                  </div>
+                  {/* Mock title */}
+                  <div className="h-4 w-4/5 bg-white/20 rounded-md mb-4" />
+                  {/* Mock points */}
+                  {[["w-3/4", "w-full", "w-5/6"], ["w-2/3", "w-full", "w-4/5"], ["w-3/5", "w-full", "w-11/12"]].map((lines, i) => (
+                    <div key={i} className="flex gap-3 mb-4">
+                      <div className="w-6 h-6 rounded-full bg-sky-500/15 border border-sky-500/25 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-sky-400 text-[9px] font-black">{i + 1}</span>
+                      </div>
+                      <div className="flex-1 space-y-1.5">
+                        <div className={`h-2.5 ${lines[0]} bg-white/25 rounded`} />
+                        <div className={`h-2 ${lines[1]} bg-white/10 rounded`} />
+                        <div className={`h-2 ${lines[2]} bg-white/10 rounded`} />
+                      </div>
+                    </div>
+                  ))}
+                  {/* Bottom line */}
+                  <div className="rounded-lg bg-zinc-950 border border-sky-500/20 px-3 py-2.5">
+                    <p className="text-sky-400 text-[8px] font-black tracking-widest uppercase mb-1.5">The Bottom Line</p>
+                    <div className="space-y-1">
+                      <div className="h-2 w-full bg-zinc-700 rounded" />
+                      <div className="h-2 w-3/4 bg-zinc-700 rounded" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* ── HOW IT WORKS ─────────────────────────────── */}
           <section className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-28">
             <div className="text-center mb-14">
