@@ -41,8 +41,6 @@ const plans = [
     features: [
       "30 summaries per month",
       "Brief history saved",
-      "Summarize videos of any length",
-      "Standard processing speed",
     ],
   },
   {
@@ -54,8 +52,6 @@ const plans = [
     features: [
       "100 summaries per month",
       "Brief history saved",
-      "Best value per summary",
-      "Same fast processing speed",
     ],
   },
 ] as const satisfies readonly (FreePlan | PaidPlan)[];
