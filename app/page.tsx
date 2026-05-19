@@ -575,34 +575,48 @@ export default function Home() {
                     <span className="text-zinc-500 text-[10px]">yt-brief.com</span>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-5">
                   <p className="text-zinc-500 text-[10px] font-bold tracking-widest uppercase mb-3">Step 2 — Read your brief</p>
+
+                  {/* Video header row */}
+                  <div className="flex items-start gap-3 mb-4 pb-4 border-b border-white/5">
+                    <div className="w-16 aspect-video rounded-lg bg-zinc-700 shrink-0 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-zinc-500" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <p className="text-white text-xs font-bold leading-snug">How Elon Musk Builds Companies Differently</p>
+                      <p className="text-sky-400 text-[10px] mt-1">▶ Watch on YouTube</p>
+                    </div>
+                  </div>
+
                   {/* Intelligence report label */}
                   <div className="inline-flex items-center px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[9px] font-bold tracking-widest uppercase mb-3">
                     Intelligence Report
                   </div>
-                  {/* Mock title */}
-                  <div className="h-4 w-4/5 bg-white/20 rounded-md mb-4" />
-                  {/* Mock points */}
-                  {[["w-3/4", "w-full", "w-5/6"], ["w-2/3", "w-full", "w-4/5"], ["w-3/5", "w-full", "w-11/12"]].map((lines, i) => (
-                    <div key={i} className="flex gap-3 mb-4">
-                      <div className="w-6 h-6 rounded-full bg-sky-500/15 border border-sky-500/25 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-sky-400 text-[9px] font-black">{i + 1}</span>
+
+                  {/* Mock points — real text */}
+                  {[
+                    { heading: "First Principles Over Best Practices", body: "Musk ignores industry convention and rebuilds every process from scratch, cutting costs by up to 10x." },
+                    { heading: "Vertical Integration as a Moat", body: "By owning the supply chain — chips, batteries, software — he removes dependencies that slow competitors." },
+                    { heading: "Deadline Pressure as a Design Tool", body: "Aggressive, often unrealistic timelines force teams to innovate rather than optimize existing solutions." },
+                  ].map((point, i) => (
+                    <div key={i} className="flex gap-2.5 mb-3.5">
+                      <div className="w-5 h-5 rounded-full bg-sky-500/15 border border-sky-500/25 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-sky-400 text-[8px] font-black">{i + 1}</span>
                       </div>
-                      <div className="flex-1 space-y-1.5">
-                        <div className={`h-2.5 ${lines[0]} bg-white/25 rounded`} />
-                        <div className={`h-2 ${lines[1]} bg-white/10 rounded`} />
-                        <div className={`h-2 ${lines[2]} bg-white/10 rounded`} />
+                      <div className="flex-1">
+                        <p className="text-white text-[11px] font-bold leading-snug">{point.heading}</p>
+                        <p className="text-zinc-500 text-[10px] mt-0.5 leading-relaxed">{point.body}</p>
                       </div>
                     </div>
                   ))}
+
                   {/* Bottom line */}
-                  <div className="rounded-lg bg-zinc-950 border border-sky-500/20 px-3 py-2.5">
-                    <p className="text-sky-400 text-[8px] font-black tracking-widest uppercase mb-1.5">The Bottom Line</p>
-                    <div className="space-y-1">
-                      <div className="h-2 w-full bg-zinc-700 rounded" />
-                      <div className="h-2 w-3/4 bg-zinc-700 rounded" />
-                    </div>
+                  <div className="rounded-lg bg-zinc-950 border border-sky-500/20 px-3 py-2.5 mt-1">
+                    <p className="text-sky-400 text-[8px] font-black tracking-widest uppercase mb-1">The Bottom Line</p>
+                    <p className="text-zinc-400 text-[10px] italic leading-relaxed">&ldquo;The real advantage is not capital or talent — it&apos;s the willingness to question every assumption.&rdquo;</p>
                   </div>
                 </div>
               </div>
